@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 //lista de puntos
 var lista;
 var idActual = 1;
+var errors =[{code:1,message:"Error desconocido"},{code:2,message:"El item no existe"},{code:3,message:"El id debería ser numerico"}]
 var TypePoint=["Semáforo acústico","Rampa discapacitados","Servicio adaptado"];
 var Point = {
     id:0,
@@ -32,6 +33,19 @@ app.get('/', function(pet,resp) {
    resp.send('Hola soy Express'); 
 });
 
+app.route('/api/type/:id')
+    .get(function(req,resp){
+        var idBuscado = parseInt(req.params.id);
+        console.log(idBuscado)
+        if(!isNaN(idBuscado))
+            resp.send(TypePoint[idBuscado])
+        else
+            resp.status(400).send(errors[2])
+    })
+app.route('/api/type')
+    .get(function(req,resp){
+        resp.send(TypePoint)
+    })
 app.route('/api/point/:id')
     .get(function(req,resp){//DONE
         var idBuscado = parseInt(req.params.id)
@@ -72,7 +86,7 @@ app.route('/api/point/:id')
     })
 app.route('/api/point')
     .get(function(req,resp){//DONE
-        var datos = Array.from(lista.values())
+        var datos = Array.from(lista.values());
         resp.status(200).send(datos);
     })
     .post(function(req,resp){   //DONE
