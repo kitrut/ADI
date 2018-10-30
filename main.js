@@ -3,24 +3,54 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-
 app.use(bodyParser.json());
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('./BBDD.db');
 //lista de puntos
 var lista;
 var idActual = 1;
 var errors =[{code:1,message:"Error desconocido"},{code:2,message:"El item no existe"},{code:3,message:"El id debería ser numerico"}]
 var TypePoint=["Semáforo acústico","Rampa discapacitados","Servicio adaptado"];
-var Point = {
-    id:0,
-    name:" ",
-    coordX:0,
-    coordY:0,
-    coordZ:0,
-    type:TypePoint[1],
-    where:function(){
-        return this.coordX+","+this.coordY;
-    }
+var Point = require('./modelo/point');
+var puntos=[];
+
+lista = new Map()
+var i = 0;
+for(i;i<5;i++){
+        var nuevo = Object.create(Point)
+        nuevo.name = "Punto "+idActual;
+        nuevo.coordX = 0;
+        nuevo.coordY = 0;
+        nuevo.coordZ = 0;
+        lista.set(idActual,nuevo);
+        puntos[i]=nuevo;
+        //BD.insertPoint(nuevo);
+        idActual++;
 }
+
+
+
+
+db.serialize(function() {
+
+  db.run('DROP TABLE IF EXISTS point');
+  db.run('CREATE TABLE point (id TEXT,name TEXT,coordX TEXT,coordY TEXT,coordZ TEXT)');
+  var stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?)');
+
+  for (var i = 0; i < 11; i++) {
+    stmt.run(i,"Punto "+i,0,0,0);
+  }
+
+  stmt.finalize();
+
+  db.each('SELECT * FROM point', function(err, row) {
+    console.log(row.id + ': ' + row.name+': '+row.coordX);
+  });
+});
+
+
+
+
 
 app.use(function(req,resp,next){
     console.log('Petición en:',Date.now());
@@ -48,15 +78,12 @@ app.route('/api/type')
     })
 app.route('/api/point/:id')
     .get(function(req,resp){//DONE
-        var idBuscado = parseInt(req.params.id)
-        if(!isNaN(idBuscado)){
-            var objeto = lista.get(idBuscado)
-            if(objeto)
-                resp.status(200).send(objeto)
+        db.get("Select * from point where id="+req.params.id,(err,row)=>{                    
+            if(row && err === null)
+                resp.send({"id":""+row.id,"name":""+row.name,"coordX":""+row.coordX,"coordY":""+row.coordY,"coordZ":""+row.coordZ})
             else
-                resp.status(404).send({code:2,message:"El item no existe"})
-        }else
-            resp.status(400).send({code:2,message:"El id debería ser numérico"})        
+                resp.status(404).send(errors[1]);
+        });   
     })
     .put(function(req,resp){//DONE
         var idBuscado = parseInt(req.params.id)
@@ -104,19 +131,11 @@ app.route('/api/point')
 
 
 //Este método delega en el server.listen "nativo" de Node
-app.listen(3000, function () {
-    lista = new Map()
-    var i = 0;
-    for(i;i<5;i++){
-        var nuevo = Object.create(Point)
-        nuevo.name = "Punto "+idActual;
-        nuevo.coordX = 0;
-        nuevo.coordY = 0;
-        nuevo.coordZ = 0;
-        nuevo.TypePoint = TypePoint[1];
-        lista.set(idActual,nuevo);
-        idActual++;
-    }
+var server = app.listen(3000, function () {
    console.log("El servidor express está en el puerto 3000");
 });
 
+process.on('SIGINT', () => {
+    db.close();
+    server.close();
+});
