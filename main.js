@@ -113,8 +113,19 @@ app.route('/api/point/:id')
     })
 app.route('/api/point')
     .get(function(req,resp){//DONE
-        var datos = Array.from(lista.values());
-        resp.status(200).send(datos);
+        db.all("Select * from point",(err,row)=>{                    
+            if(row && err === null){
+                var aux =[];
+                var i=0;
+                row.forEach(function (row) {
+                    aux[i]={"id":""+row.id,"name":""+row.name,"coordX":""+row.coordX,"coordY":""+row.coordY,"coordZ":""+row.coordZ};
+                    i++;
+                })
+                resp.send(aux)
+            }
+            else
+                resp.status(404).send(errors[1]);
+        });   
     })
     .post(function(req,resp){   //DONE
         var nuevo= req.body
