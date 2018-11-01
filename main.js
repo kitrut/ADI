@@ -12,6 +12,7 @@ var idActual = 1;
 var errors =[{code:1,message:"Error desconocido"},{code:2,message:"El item no existe"},{code:3,message:"El id debería ser numerico"}]
 var TypePoint=["Semáforo acústico","Rampa discapacitados","Servicio adaptado"];
 var Point = require('./modelo/point');
+
 var puntos=[];
 
 lista = new Map()
@@ -29,23 +30,36 @@ for(i;i<5;i++){
 }
 
 
-
+var idPointBBDD = 0;
 
 db.serialize(function() {
 
   db.run('DROP TABLE IF EXISTS point');
-  db.run('CREATE TABLE point (id TEXT,name TEXT,coordX TEXT,coordY TEXT,coordZ TEXT)');
-  var stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?)');
-
-  for (var i = 0; i < 11; i++) {
-    stmt.run(i,"Punto "+i,0,0,0);
+  db.run('DROP TABLE IF EXISTS type');
+  db.run('CREATE TABLE type (id INTEGER,name TEXT)');
+  stmt = db.prepare('INSERT INTO type VALUES (?,?)');
+  for(var i = 0;i<TypePoint.length;i++){
+      stmt.run(i,TypePoint[i]);
   }
+  stmt.finalize();
 
+  
+  db.run('CREATE TABLE point (id INTEGER,name TEXT,coordX TEXT,coordY TEXT,coordZ TEXT,type INTEGER, FOREIGN KEY(type) REFERENCES type(id))');
+  var stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?,?)');
+  
+  for (var i = 0; i < 11; i++) {
+    stmt.run(idPointBBDD,"Punto "+i,0,0,0,0);
+    idPointBBDD++;
+  }
+  
   stmt.finalize();
 
   db.each('SELECT * FROM point', function(err, row) {
-    console.log(row.id + ': ' + row.name+': '+row.coordX);
+    console.log(row.id + ': ' + row.name+': '+row.coordX + ' es del type: '+row.type);
   });
+  db.each('Select * from type',function(err,row){
+      console.log(row.id + ': '+row.name);
+  })
 });
 
 
@@ -63,81 +77,68 @@ app.get('/', function(pet,resp) {
    resp.send('Hola soy Express'); 
 });
 
-app.route('/api/type/:id')
+app.route('/api/types/:id')
     .get(function(req,resp){
-        var idBuscado = parseInt(req.params.id);
-        console.log(idBuscado)
-        if(!isNaN(idBuscado))
-            resp.send(TypePoint[idBuscado])
-        else
-            resp.status(400).send(errors[2])
+        db.get("Select * from type where id="+req.params.id,(err,row)=>{                    
+            if(row && err === null) resp.send(row);
+            else resp.status(404).send(errors[1]);
+        });
     })
-app.route('/api/type')
+app.route('/api/types')
     .get(function(req,resp){
-        resp.send(TypePoint)
+        db.all("Select * from type",(err,row)=>{                    
+            if(row && err === null) resp.send(row);
+            else resp.status(404).send(errors[1]);
+        });
     })
-app.route('/api/point/:id')
-    .get(function(req,resp){//DONE
+app.route('/api/points/:id')
+    .get(function(req,resp){
+        console.log("Dame el punto numero: "+req.params.id);
         db.get("Select * from point where id="+req.params.id,(err,row)=>{                    
-            if(row && err === null)
-                resp.send({"id":""+row.id,"name":""+row.name,"coordX":""+row.coordX,"coordY":""+row.coordY,"coordZ":""+row.coordZ})
-            else
-                resp.status(404).send(errors[1]);
+            if(row && err === null)  resp.send(row)
+            else resp.status(404).send(errors[1]);
         });   
     })
-    .put(function(req,resp){//DONE
-        var idBuscado = parseInt(req.params.id)
-        var objeto = lista.get(idBuscado)
-        if(objeto){ 
-            if(req.body.nombre && req.body.coordX && req.body.coordY){
-
-            }
-            var nuevo = Object.create(Point)
-            nuevo.name = req.body.nombre;
-            nuevo.coordX = req.body.coordX;
-            nuevo.coordY = req.body.coordY;
-            lista.set(idBuscado,nuevo);
-            resp.status(200).send(nuevo);
-        }else
-            resp.status(404).send({code:2,message:"El item no existe"})
-        
+    .put(function(req,resp){
+        var sql = 'UPDATE point SET '+
+            'name="'+req.body.name +
+            '",coordX="' + req.body.coordX +
+            '",coordY="' + req.body.coordY +
+            '",coordZ="' + req.body.coordZ +
+            '",type ="' + req.body.type +
+            '" where id='+req.params.id;
+        db.run(sql,function(err){
+            if(err) resp.status(404).send(err);
+            else    resp.status(200).send();
+            
+        })        
     })
-    .delete(function(req,resp){//DONE
+    .delete(function(req,resp){
         var idBuscado = parseInt(req.params.id)
         var objeto = lista.get(idBuscado)
         if(objeto){
             lista.delete(idBuscado);
             resp.status(200).send();
-        }else
-            resp.status(404).send({code:2,message:"El item no existe"})
+        }else resp.status(404).send({code:2,message:"El item no existe"})
     })
-app.route('/api/point')
+app.route('/api/points')
     .get(function(req,resp){//DONE
         db.all("Select * from point",(err,row)=>{                    
-            if(row && err === null){
-                var aux =[];
-                var i=0;
-                row.forEach(function (row) {
-                    aux[i]={"id":""+row.id,"name":""+row.name,"coordX":""+row.coordX,"coordY":""+row.coordY,"coordZ":""+row.coordZ};
-                    i++;
-                })
-                resp.send(aux)
-            }
-            else
-                resp.status(404).send(errors[1]);
+            if(row && err === null) resp.send(row)
+            else resp.status(404).send(errors[1]);
         });   
     })
-    .post(function(req,resp){   //DONE
-        var nuevo= req.body
-
-        if(nuevo.nombre){
-            var nuevoObjeto = {id:idActual,nombre:nuevo.nombre}
-            lista.set(nuevoObjeto.id,nuevoObjeto)
-            resp.status(201).header('Location', 'http://localhost:3000/api/point/'+idActual).send(nuevoObjeto)
-            idActual++
-        }else
-            resp.status(400).send({code:3,message:'Falta el campo nombre'})
-
+    .post(function(req,resp){
+        var body= req.body
+        var stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?,?)');
+        stmt.run(idPointBBDD,body.name,body.coordX,body.coordY,body.coordZ,body.type,function(err){
+            if(err) resp.status(400).send("Error");
+            else{
+                resp.status(201).header('Location', 'http://localhost:3000/api/point/'+idPointBBDD).send();
+                idPointBBDD++;
+            }
+        });
+        stmt.finalize();
     })
 
 
