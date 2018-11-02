@@ -20,6 +20,6 @@ var server = app.listen(3000, function () {
 });
 
 process.on('SIGINT', () => {
-    db.close();
+    database.close();
     server.close();
 });

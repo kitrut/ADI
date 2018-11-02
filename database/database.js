@@ -28,6 +28,9 @@ database = {
             
             stmt.finalize();
           });
+    },
+    close:function(){
+        db.close();
     }
 }
 module.exports = database;
