@@ -13,8 +13,9 @@ router.post('/login',function(req,resp){DAOuser.login(req,resp,db)})
 router.post('/registro',function(req,resp){DAOuser.registro(req,resp,db)});
 router.post('/logout',function(req,resp){DAOuser.logout(req,resp)});
 
-router.get('/api/types/:id',function(req,res){DAOtype.find(req,res,db)})
-router.get('/api/types',function(req,resp){DAOtype.all(req,resp,db)})
+router.get('/api/types/:id',function(req,res){DAOtype.find(req,res,db)});
+router.get('/api/types',function(req,resp){DAOtype.all(req,resp,db)});
+router.get('/api/types/:id/points',function(req,resp){DAOtype.findWithPoint(req,resp,db)});
 
 router.get('/api/points/:id',function(req,resp){ DAOpoint.find(req,resp,db)})
 router.put('/api/points/:id',function(req,resp){DAOpoint.put(req,resp,db)})

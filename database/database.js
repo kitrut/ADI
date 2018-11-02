@@ -20,10 +20,6 @@ database = {
             stmt.run("root",jwt.encode(1,secret));
             stmt.finalize();
 
-            db.each("Select * from usuario",function(err,row){
-                console.log(row);
-            })
-
             db.run('CREATE TABLE type (id INTEGER PRIMARY KEY,name TEXT)');
             stmt = db.prepare('INSERT INTO type VALUES (?,?)');
             for(var i = 0;i<TypePoint.length;i++){
@@ -35,8 +31,7 @@ database = {
             stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?,?)');
             
             for (var i = 0; i < 10; i++) {
-              stmt.run(null,"Punto "+i,0,0,0,0);
-              console.log(i)
+              stmt.run(null,"Punto "+i,0,0,0,1);
             }
             
             stmt.finalize();
