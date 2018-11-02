@@ -1,10 +1,14 @@
 var idPointBBDD=11;
 DAOpoint ={
     find:function(req,resp,db){
-        db.get("Select * from point where id="+req.params.id,(err,row)=>{                    
-            if(row && err === null)  resp.send(row)
-            else resp.status(404).send(errors[1]);
-        }); 
+        console.log("Dame el punto numero: "+req.params.id)
+        var stmt = db.prepare("Select * from point where id = ?");
+        stmt.bind(req.params.id);
+        stmt.get(function(err,row){
+            if(err) resp.status(400).send({"error":0,"message":"Error en la sentencia SQL"});
+            else if(row) resp.send(row);
+            else resp.status(404).send({"error":1,"message":"El recurso no existe"});
+        })
     },
     put:function(req,resp,db){
         var sql = 'UPDATE point SET '+
