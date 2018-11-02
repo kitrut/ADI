@@ -1,17 +1,13 @@
 var jwt = require('jwt-simple');
 var secret = '123';
 
-var userIDCount = 1;
 DAOuser ={
     registro:function(req,resp,db){
-        var stmt = db.prepare('INSERT INTO usuario VALUES (?,?,?)');
-        stmt.run(userIDCount,req.body.usuario,jwt.encode(req.body.password,secret));
+        var stmt = db.prepare('INSERT INTO usuario VALUES (?,?)');
+        var token = jwt.encode(req.body.password,secret);
+        stmt.run(req.body.usuario,token);
         stmt.finalize();
-        userIDCount++;
-        db.each("Select * from usuario",function(err,row){
-            console.log(row);
-        })
-      resp.send("OK")
+      resp.send({"token":token})
     },
     login:function(req,resp,db){
         resp.send(jwt.encode("Intento de conexion",secret))

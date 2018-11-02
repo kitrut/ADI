@@ -15,27 +15,27 @@ database = {
 
             console.log("Creando base de datos y ejecutando seeders...");
 
-            db.run('CREATE TABLE usuario (id INTEGER,name TEXT,token TEXT)');
-            var stmt = db.prepare('INSERT INTO usuario VALUES (?,?,?)');
-            stmt.run(0,"root",jwt.encode(1,secret));
+            db.run('CREATE TABLE usuario (name TEXT PRIMARY KEY,token TEXT)');
+            var stmt = db.prepare('INSERT INTO usuario VALUES (?,?)');
+            stmt.run("root",jwt.encode(1,secret));
             stmt.finalize();
 
             db.each("Select * from usuario",function(err,row){
                 console.log(row);
             })
 
-            db.run('CREATE TABLE type (id INTEGER,name TEXT)');
+            db.run('CREATE TABLE type (id INTEGER PRIMARY KEY,name TEXT)');
             stmt = db.prepare('INSERT INTO type VALUES (?,?)');
             for(var i = 0;i<TypePoint.length;i++){
-                stmt.run(i,TypePoint[i]);
+                stmt.run(null,TypePoint[i]);
             }
             stmt.finalize();          
             
-            db.run('CREATE TABLE point (id INTEGER,name TEXT,coordX TEXT,coordY TEXT,coordZ TEXT,type INTEGER, FOREIGN KEY(type) REFERENCES type(id))');
+            db.run('CREATE TABLE point (id INTEGER PRIMARY KEY,name TEXT,coordX TEXT,coordY TEXT,coordZ TEXT,type INTEGER, FOREIGN KEY(type) REFERENCES type(id))');
             stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?,?)');
             
             for (var i = 0; i < 10; i++) {
-              stmt.run(i,"Punto "+i,0,0,0,0);
+              stmt.run(null,"Punto "+i,0,0,0,0);
               console.log(i)
             }
             
