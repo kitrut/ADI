@@ -1,7 +1,6 @@
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./BBDD.db');
 
-var idPointBBDD = 0;
 database = {
     createModel:function(){
         db.serialize(function() {
@@ -17,15 +16,14 @@ database = {
             for(var i = 0;i<TypePoint.length;i++){
                 stmt.run(i,TypePoint[i]);
             }
-            stmt.finalize();
-          
+            stmt.finalize();          
             
             db.run('CREATE TABLE point (id INTEGER,name TEXT,coordX TEXT,coordY TEXT,coordZ TEXT,type INTEGER, FOREIGN KEY(type) REFERENCES type(id))');
             var stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?,?)');
             
-            for (var i = 0; i < 11; i++) {
-              stmt.run(idPointBBDD,"Punto "+i,0,0,0,0);
-              idPointBBDD++;
+            for (var i = 0; i < 10; i++) {
+              stmt.run(i,"Punto "+i,0,0,0,0);
+              console.log(i)
             }
             
             stmt.finalize();
