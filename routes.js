@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+let request = require('request');
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./database/BBDD.db');
@@ -26,6 +27,21 @@ function checkAuth(req,resp,next){
 
 
 router.get('/',function(req,resp){resp.send('Hola soy Express');})
+router.get('/time',function(req,resp){
+    let apiKey = '811a871418511ca0234f9e42ab4382f4';
+    let city = 'Alicante';
+    let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
+
+    request(url, function (err, response, body) {
+    if(err){
+        console.log('error:', error);
+        resp.status(500).send(error);
+    } else {
+        console.log('body:', body);
+        resp.send(body);
+    }
+    });
+})
 
 
 router.post('/login',function(req,resp){DAOuser.login(req,resp,db)})
