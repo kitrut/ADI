@@ -1,3 +1,7 @@
+let page_size_default=4;
+let page_numer_default = 1;
+
+
 DAOpoint ={
     find:function(req,resp,db){
         console.log("Dame el punto numero: "+req.params.id)
@@ -30,9 +34,14 @@ DAOpoint ={
         })
     },
     all:function(req,resp,db){
-        db.all("Select * from point",(err,row)=>{                    
-            if(row && err === null) resp.send(row)
-            else resp.status(404).send(errors[1]);
+        var limit = page_size_default;
+        var offset = limit * page_numer_default;
+        if(req.query.limit) limit = req.query.limit;    
+        if(req.query.offset) offset = req.query.offset * limit;
+        db.all("Select * from point LIMIT "+limit+" OFFSET "+offset,(err,row)=>{                    
+            if(err) resp.status(500).send(err);
+            if(row) resp.send(row);
+            else resp.status(404).send({"error":""});
         });  
     },
     post:function(req,resp,db){
