@@ -1,0 +1,650 @@
+{
+	"info": {
+		"_postman_id": "fca76676-9338-4773-b54d-e11428f17293",
+		"name": "DOC API GENERADOR DE MAPAS",
+		"description": "# El objetivo del API es servir la información necesaria al cliente para poder construir un mapa. Para ello:\n* Se va a proporcionar los datos en JSON\n* Parte pública:\n  * Obtener la información con los getters\n  * Registro y Login\n* Parte privada(token):\n  * Actualizar un punto\n  * Borrar un punto\n  * Crear nuevos puntos\n* Se propone el uso de KML para mostrar la información [Ver ejemplo](http://dagik.org/kml_intro/E/point.html)\n\n",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/registro",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "42e0ca34-826f-4e1a-aea6-21aeb5c4b994",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(201);\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"usuario\":\"manuel\",\n\t\"password\":1234\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/registro",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"registro"
+					]
+				},
+				"description": "* Registra al usuario en la base de datos\n* Recupera el token si registro correcto"
+			},
+			"response": []
+		},
+		{
+			"name": "/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "311f993a-110e-42bd-a0cd-5c0dac72711b",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(200);\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"usuario\":\"root\",\n\t\"password\":1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				},
+				"description": "* Obtiene el token del usuario"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/points",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3e9c8fb2-674c-43bc-b73f-7d726149bb3b",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(200);\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/points",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"points"
+					]
+				},
+				"description": "* Obtiene la colección de todos los puntos del sistema"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/points/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "be08ab9c-0333-479f-98fb-815efedd37cb",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(200);\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "737c5068-9569-4d8d-9801-e516a22bfe8b",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/points/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"points",
+						"2"
+					]
+				},
+				"description": "* Obtiene la información de un punto en particular.\n* Si no se encuentra el punto, devuelve 404"
+			},
+			"response": [
+				{
+					"name": "GET /api/points/:id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/points/0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"points",
+								"0"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "73"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"49-yljVd/zJ6aT0kwG0vk12iJyGQJU\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 02 Nov 2018 02:47:26 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 0,\n    \"name\": \"Punto 0\",\n    \"coordX\": \"0\",\n    \"coordY\": \"0\",\n    \"coordZ\": \"0\",\n    \"type\": 0\n}"
+				}
+			]
+		},
+		{
+			"name": "/api/points?limit=4&offset=1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/points?limit=4&offset=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"points"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "4",
+							"description": "numero de resultador por consulta"
+						},
+						{
+							"key": "offset",
+							"value": "1",
+							"description": "indice de la pagina (se multiplicará por el limit para la consulta)"
+						}
+					]
+				},
+				"description": "* Obtiene un subconjunto de datos sobre todos los puntos"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/points",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1bd88928-79d8-4800-8f3c-48bf97e7c600",
+						"exec": [
+							"pm.test(\"Objeto creado\", function () {\r",
+							"     pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"Punto nuevo\",\n\t\"coordX\":\"1\",\n\t\"coordY\":\"2\",\n\t\"coordZ\":\"3\",\n\t\"type\":\"2\",\n\t\"token\":\"asdf\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/points",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"points"
+					]
+				},
+				"description": "# <span style=\"color:red\">REQUIERE DEL TOKEN</span>"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/points/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4f21d311-44a3-4f37-a0b1-0175abed0d51",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(202);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\":\"asdf\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/points/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"points",
+						"1"
+					]
+				},
+				"description": "# <span style=\"color:red\">REQUIERE DEL TOKEN</span>"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/points/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9563dff3-c426-4a0c-839e-e84bd748109b",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"perro\",\n\t\"coordX\":\"123\",\n\t\"coordY\":\"234\",\n\t\"coordZ\":\"345\",\n\t\"type\": \"0\",\n\t\"token\":\"asdf\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/points/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"points",
+						"1"
+					]
+				},
+				"description": "# <span style=\"color:red\">REQUIERE DEL TOKEN</span>"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "008331f3-3b55-43f3-9057-1bc7a258e981",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(200);\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/types",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"types"
+					]
+				},
+				"description": "* Recupera todos los tipos de puntos que hay en el sistema"
+			},
+			"response": [
+				{
+					"name": "GET /api/types",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/types",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"types"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "114"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"72-jyxiZZhYgnZ24WxhtCTQ328gnsk\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 02 Nov 2018 11:34:19 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 0,\n        \"name\": \"Semáforo acústico\"\n    },\n    {\n        \"id\": 1,\n        \"name\": \"Rampa discapacitados\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"Servicio adaptado\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "/api/types/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "93f9b40e-8dcb-461a-9b44-dd3c06154a1e",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(200);\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/types/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"types",
+						"1"
+					]
+				},
+				"description": "* Obtiene la información de un único tipo\n* <span style=\"color:red\">Errores:</span>\n  * 404: Si el id no lo encuentra\n  * 500: fallo en la base de datos"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/types/1/points",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6bfef40-4b8f-46ef-bb7b-1ec395fc10f2",
+						"exec": [
+							"pm.test(\"Code 200 y tiene el json correcto\", function () {\r",
+							"     pm.response.to.have.status(200);\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/types/1/points",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"types",
+						"1",
+						"points"
+					]
+				},
+				"description": "* Obtiene la información de un tipo en concreto junto con todos los puntos asociados a este tipo\n\n* Utilidad: dame todos los puntos de parking adaptados\n\n* <span style=\"color:red\">Errores:</span>\n  * 404: Si el id no lo encuentra\n  * 500: fallo en la base de datos"
+			},
+			"response": []
+		},
+		{
+			"name": "/time",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/time",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"time"
+					]
+				},
+				"description": "Prueba de llamada a un API externo"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "79b80703-97d3-448d-9f24-6b67d22fb93e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "91e69fb0-07f3-48c1-a57f-93533e507a91",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
