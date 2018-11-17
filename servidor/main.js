@@ -1,7 +1,9 @@
 var express = require('express');
+var cors = require('cors');
 var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
+app.use(cors());
 var router = require("./routes") // redirecciona cada endpoint con la funcion que lo resuelve
 var database = require("./database/database") // crea el schema de base de datos y lo puebla con datos
 
