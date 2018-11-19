@@ -5,9 +5,7 @@ let page_numer_default = 1;
 DAOpoint ={
     find:function(req,resp,db){
         console.log("Dame el punto numero: "+req.params.id)
-        var stmt = db.prepare("Select * from point where id = ?");
-        stmt.bind(req.params.id);
-        stmt.get(function(err,row){
+        db.get("Select p.*,t.type_name from point p,type t where p.id ="+req.params.id+" and p.type=t.id",function(err,row){
             if(err) resp.status(400).send({"error":0,"message":"Error en la sentencia SQL"});
             else if(row) resp.send(row);
             else resp.status(404).send({"error":1,"message":"El recurso no existe"});

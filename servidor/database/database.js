@@ -20,7 +20,7 @@ database = {
             stmt.run("root",jwt.encode(1,secret));
             stmt.finalize();
 
-            db.run('CREATE TABLE type (id INTEGER PRIMARY KEY,name TEXT)');
+            db.run('CREATE TABLE type (id INTEGER PRIMARY KEY,type_name TEXT)');
             stmt = db.prepare('INSERT INTO type VALUES (?,?)');
             for(var i = 0;i<TypePoint.length;i++){
                 stmt.run(null,TypePoint[i]);

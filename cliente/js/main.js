@@ -20,19 +20,27 @@ var templateLista = `
 ` 
 var templateDetalles = `
   <span id="detalles_{{id}}">
-    {{detalles}}
+    <h2>Detalles del punto con id: {{id}}</h2>
+    {{name}}
+    {{type}}
+    {{type_name}}
   </span>
 `
 
 var tmpl_lista_compilada = compile(templateLista)
 var tmpl_item_compilada = compile(templateItem)
+var tmpl_detalle_compilada = compile(templateDetalles)
 
-var servicio_API = new Servicio_API('http://localhost:3000/api/points')
+var servicio_API = new Servicio_API('http://localhost:3000')
 
 document.addEventListener('DOMContentLoaded', function() {
     //document.getElementById('mensaje').innerHTML = saludar();
     servicio_API.obtenerPuntos().then(function(datos){
         var listaHTML = tmpl_lista_compilada(datos)
-        document.getElementById("content").innerHTML = listaHTML;
+        document.getElementById("content-left").innerHTML = listaHTML;        
+    })
+    servicio_API.getPunto(1).then(function(datos){
+      var listaHTML2 = tmpl_detalle_compilada(datos);
+      document.getElementById("content-right").innerHTML = listaHTML2;
     })
 })

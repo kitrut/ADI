@@ -144,7 +144,21 @@ function () {
   _createClass(Servicio_API, [{
     key: "obtenerPuntos",
     value: function obtenerPuntos() {
-      return fetch(this.API_URL).then(function (response) {
+      return fetch(this.API_URL + '/api/points').then(function (response) {
+        if (response.ok) return response.json();
+      });
+    }
+  }, {
+    key: "getPunto",
+    value: function getPunto(id) {
+      return fetch(this.API_URL + '/api/points/' + id).then(function (response) {
+        if (response.ok) return response.json();
+      });
+    }
+  }, {
+    key: "obtenerTipos",
+    value: function obtenerTipos() {
+      return fetch(this.API_URL + '/api/types').then(function (response) {
         if (response.ok) return response.json();
       });
     }
@@ -9855,15 +9869,20 @@ var _handlebars = require("handlebars");
 //Archivo "main.js"
 var templateItem = "\n   <div>\n      <span id=\"{{id}}\">\n         <strong>{{name}}</strong> - <em>{{cantidad}}</em>\n      </span>   \n      <a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\">Detalles</a>\n   </div>\n";
 var templateLista = "\n <h2>Lista de la puntos</h2>\n {{#.}}\n   ".concat(templateItem, "\n {{/.}}\n");
-var templateDetalles = "\n  <span id=\"detalles_{{id}}\">\n    {{detalles}}\n  </span>\n";
+var templateDetalles = "\n  <span id=\"detalles_{{id}}\">\n    <h2>Detalles del punto con id: {{id}}</h2>\n    {{name}}\n    {{type}}\n    {{type_name}}\n  </span>\n";
 var tmpl_lista_compilada = (0, _handlebars.compile)(templateLista);
 var tmpl_item_compilada = (0, _handlebars.compile)(templateItem);
-var servicio_API = new _API_puntos.Servicio_API('http://localhost:3000/api/points');
+var tmpl_detalle_compilada = (0, _handlebars.compile)(templateDetalles);
+var servicio_API = new _API_puntos.Servicio_API('http://localhost:3000');
 document.addEventListener('DOMContentLoaded', function () {
   //document.getElementById('mensaje').innerHTML = saludar();
   servicio_API.obtenerPuntos().then(function (datos) {
     var listaHTML = tmpl_lista_compilada(datos);
-    document.getElementById("content").innerHTML = listaHTML;
+    document.getElementById("content-left").innerHTML = listaHTML;
+  });
+  servicio_API.getPunto(1).then(function (datos) {
+    var listaHTML2 = tmpl_detalle_compilada(datos);
+    document.getElementById("content-right").innerHTML = listaHTML2;
   });
 });
 },{"./saludador.js":"js/saludador.js","./servicios/API_puntos.js":"js/servicios/API_puntos.js","handlebars":"node_modules/handlebars/lib/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -9893,7 +9912,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49577" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51109" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
