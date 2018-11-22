@@ -1,7 +1,10 @@
+html{
+    background-color: #000000;
+}
 body{
     margin: 0;
 }
-nav u1{
+nav ul{
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -27,11 +30,12 @@ nav li a:hover:not(.active){
     color: white;
 }
 #div-body{
+    background-color: #000000;
     margin-left:15%;
     padding:1px 16px;
 }
 #map {
-    height: 500px;
+    height: 300px;
     width: 100%;
 }
 
@@ -40,12 +44,12 @@ nav li a:hover:not(.active){
     padding-top: 20px;
 }
 #content-left{
-    background-color: red;
-    width: 49%;
-    height: 300px;
+    padding-left: 20px;
+    width: 48%;
+    float: left;
 }
 #content-right{
-    background-color: blue;
-    width: 49%;
-    height: 300px;
+    padding-left: 20px;
+    width: 48%;
+    float: right;
 }

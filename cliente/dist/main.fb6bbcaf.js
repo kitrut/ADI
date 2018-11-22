@@ -162,6 +162,41 @@ function () {
         if (response.ok) return response.json();
       });
     }
+  }, {
+    key: "borrarPunto",
+    value: function borrarPunto(id) {
+      return fetch(this.API_URL + '/api/points/' + id, {
+        method: 'DELETE',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"
+        })
+      }).then(function (respuesta) {
+        if (respuesta.ok) return respuesta.json();
+      });
+    }
+  }, {
+    key: "crearPunto",
+    value: function crearPunto(item) {
+      return fetch(this.API_URL + '/api/points', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "name": "Punto nuevo",
+          "coordX": "1",
+          "coordY": "2",
+          "coordZ": "3",
+          "type": "2",
+          "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"
+        })
+      }).then(function (respuesta) {
+        if (respuesta.ok) return respuesta.json();
+      });
+    }
   }]);
 
   return Servicio_API;
@@ -9867,23 +9902,61 @@ var _API_puntos = require("./servicios/API_puntos.js");
 var _handlebars = require("handlebars");
 
 //Archivo "main.js"
-var templateItem = "\n   <div>\n      <span id=\"{{id}}\">\n         <strong>{{name}}</strong> - <em>{{cantidad}}</em>\n      </span>   \n      <a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\">Detalles</a>\n   </div>\n";
-var templateLista = "\n <h2>Lista de la puntos</h2>\n {{#.}}\n   ".concat(templateItem, "\n {{/.}}\n");
-var templateDetalles = "\n  <span id=\"detalles_{{id}}\">\n    <h2>Detalles del punto con id: {{id}}</h2>\n    {{name}}\n    {{type}}\n    {{type_name}}\n  </span>\n";
+var templateItem = "    \n  <td scope=\"col\">{{id}}</td>\n  <td scope=\"col\">{{name}}</td>\n  <td scope=\"col\"><a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\">Detalles</a></td>\n  <td scope=\"col\"><a id=\"enlace_delete_{{id}}\" href=\"javascript:borrarPunto({{id}})\"><i class=\"fa fa-eye\"></i>Borrar</a></td>    \n";
+var templateLista = "\n \n <table class=\"table table-dark\">\n    <thead>\n      <tr>\n        <td colspan=4><h2>Lista de la puntos</h2></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n          ".concat(templateItem, "\n        </tr>\n        {{/.}}      \n    </tbody>\n   </table>\n");
+var templateDetalles = "\n  <div class=\"row bg-dark\">\n    <div class=\"col-md-12\">\n    <h2>Detalles del punto con id: {{id}}</h2>\n    <form>\n      <div class=\"form-group\">\n          <label for=\"PointName\">Nombre del punto</label>\n          <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\" value=\"{{name}}\">\n      </div>\n      <div class=\"form-group\">\n          <label for=\"PointX\">Coordenada X</label>\n          <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\" value=\"{{coordX}}\">\n      </div>\n      <div class=\"form-group\">\n          <label for=\"PointY\">Coordenada Y</label>\n          <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\" value=\"{{coordY}}\">\n      </div>\n      <div class=\"form-group\">\n          <label for=\"PointZ\">Coordenada Z</label>\n          <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\" value=\"{{coordZ}}\">\n      </div>\n      <div class=\"form-group\">\n          <label for=\"Tipo\">Tipo de punto</label>\n          <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\" value=\"{{type_name}}\">\n      </div>\n      <button type=\"submit\">Guardar</button>\n      </form>\n    </div>\n  </div>\n";
+var formulario = "\n<form>\n<div class=\"form-group\">\n    <label for=\"PointName\">Nombre del punto</label>\n    <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\">\n</div>\n<div class=\"form-group\">\n    <label for=\"PointX\">Coordenada X</label>\n    <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\">\n</div>\n<div class=\"form-group\">\n    <label for=\"PointY\">Coordenada Y</label>\n    <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\">\n</div>\n<div class=\"form-group\">\n    <label for=\"PointZ\">Coordenada Z</label>\n    <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\">\n</div>\n<div class=\"form-group\">\n    <label for=\"Tipo\">Tipo de punto</label>\n    <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\">\n</div>\n</form>\n";
 var tmpl_lista_compilada = (0, _handlebars.compile)(templateLista);
 var tmpl_item_compilada = (0, _handlebars.compile)(templateItem);
 var tmpl_detalle_compilada = (0, _handlebars.compile)(templateDetalles);
 var servicio_API = new _API_puntos.Servicio_API('http://localhost:3000');
+
+function verDetalles(id) {
+  servicio_API.getPunto(id).then(function (datos) {
+    var listaHTML2 = tmpl_detalle_compilada(datos);
+    document.getElementById("content-right").innerHTML = listaHTML2;
+  });
+}
+
+window.verDetalles = verDetalles;
 document.addEventListener('DOMContentLoaded', function () {
   //document.getElementById('mensaje').innerHTML = saludar();
   servicio_API.obtenerPuntos().then(function (datos) {
     var listaHTML = tmpl_lista_compilada(datos);
     document.getElementById("content-left").innerHTML = listaHTML;
   });
-  servicio_API.getPunto(1).then(function (datos) {
-    var listaHTML2 = tmpl_detalle_compilada(datos);
-    document.getElementById("content-right").innerHTML = listaHTML2;
+});
+
+function verListaPuntos() {
+  servicio_API.obtenerPuntos().then(function (datos) {
+    var listaHTML = tmpl_lista_compilada(datos);
+    document.getElementById("content").innerHTML = "<div id=\"content-left\"></div><div id=\"content-right\"></div>";
+    document.getElementById("content-left").innerHTML = listaHTML;
   });
+}
+
+window.verListaPuntos = verListaPuntos;
+
+function loadFormPuntos() {
+  document.getElementById("content").innerHTML = formulario;
+}
+
+window.loadFormPuntos = loadFormPuntos;
+
+function borrarPunto(id) {
+  servicio_API.borrarPunto(id).then(function (datos) {});
+}
+
+window.borrarPunto = borrarPunto;
+
+function crearPunto(id) {
+  servicio_API.crearPunto(id).then(function (datos) {//document.getElementById("content").innerHTML = "TODO se deberia hacer el delete del id: "+id;
+  });
+}
+
+window.crearPunto = crearPunto;
+document.getElementById("boton_add_item").addEventListener('click', function () {
+  servicio_API.crearPunto("").then(function (resp) {});
 });
 },{"./saludador.js":"js/saludador.js","./servicios/API_puntos.js":"js/servicios/API_puntos.js","handlebars":"node_modules/handlebars/lib/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -9912,7 +9985,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51109" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52242" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

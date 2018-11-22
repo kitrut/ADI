@@ -9,6 +9,7 @@ var DAOtype = require('./data_models/DAOtype');
 var DAOuser = require('./data_models/DAOuser');
 
 function checkAuth(req,resp,next){
+    console.log("Peticion en servidor"+req.path);
     if(req.body.token){
         db.get('SELECT * FROM usuario WHERE token="'+req.body.token+'"',function(err,row){
             if(err) resp.status(500).send({"error":"Error en BBDD"});
