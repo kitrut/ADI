@@ -104,21 +104,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"js/saludador.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.saludar = saludar;
-//Archivo "saludador.js"
-var saludos = ["¡Hola!", "Yiiiha!", "¿Cómo estás?", "Buenaaaas"];
-
-function saludar() {
-  var pos = Math.floor(Math.random() * saludos.length);
-  return saludos[pos];
-}
-},{}],"js/servicios/API_puntos.js":[function(require,module,exports) {
+})({"js/servicios/API_puntos.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -143,8 +129,8 @@ function () {
 
   _createClass(Servicio_API, [{
     key: "obtenerPuntos",
-    value: function obtenerPuntos() {
-      return fetch(this.API_URL + '/api/points').then(function (response) {
+    value: function obtenerPuntos(page) {
+      return fetch(this.API_URL + '/api/points?limit=5&offset=' + page).then(function (response) {
         if (response.ok) return response.json();
       });
     }
@@ -174,27 +160,79 @@ function () {
           "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"
         })
       }).then(function (respuesta) {
-        if (respuesta.ok) return respuesta.json();
+        return respuesta.json();
       });
     }
   }, {
     key: "crearPunto",
-    value: function crearPunto(item) {
+    value: function crearPunto(name, coordx, coordy, coordz, type, token) {
       return fetch(this.API_URL + '/api/points', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'
         },
         body: JSON.stringify({
-          "name": "Punto nuevo",
-          "coordX": "1",
-          "coordY": "2",
-          "coordZ": "3",
-          "type": "2",
-          "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"
+          "name": name,
+          "coordX": coordx,
+          "coordY": coordy,
+          "coordZ": coordz,
+          "type": type,
+          "token": token
         })
       }).then(function (respuesta) {
-        if (respuesta.ok) return respuesta.json();
+        return respuesta.json();
+      });
+    }
+  }, {
+    key: "actualizaPunto",
+    value: function actualizaPunto(id, name, coordx, coordy, coordz, type, token) {
+      return fetch(this.API_URL + '/api/points/' + id, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "name": name,
+          "coordX": coordx,
+          "coordY": coordy,
+          "coordZ": coordz,
+          "type": type,
+          "token": token
+        })
+      }).then(function (respuesta) {
+        return respuesta.json();
+      });
+    }
+  }, {
+    key: "login",
+    value: function login(usuario, password) {
+      return fetch(this.API_URL + '/login', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "usuario": usuario,
+          "password": password
+        })
+      }).then(function (respuesta) {
+        return respuesta.json();
+      });
+    }
+  }, {
+    key: "registro",
+    value: function registro(usuario, password) {
+      return fetch(this.API_URL + '/registro', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "usuario": usuario,
+          "password": password
+        })
+      }).then(function (respuesta) {
+        return respuesta.json();
       });
     }
   }]);
@@ -203,6 +241,67 @@ function () {
 }();
 
 exports.Servicio_API = Servicio_API;
+},{}],"js/servicios/API_usuarios.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.S_Usuario = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var S_Usuario =
+/*#__PURE__*/
+function () {
+  function S_Usuario(url) {
+    _classCallCheck(this, S_Usuario);
+
+    this.API_URL = url;
+  }
+
+  _createClass(S_Usuario, [{
+    key: "login",
+    value: function login(usuario, password) {
+      return fetch(this.API_URL + '/login', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "usuario": usuario,
+          "password": password
+        })
+      }).then(function (respuesta) {
+        if (respuesta.ok) return respuesta.json();
+      });
+    }
+  }, {
+    key: "registro",
+    value: function registro(usuario, password) {
+      return fetch(this.API_URL + '/registro', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "usuario": usuario,
+          "password": password
+        })
+      }).then(function (respuesta) {
+        if (respuesta.ok) return respuesta.json();
+      });
+    }
+  }]);
+
+  return S_Usuario;
+}();
+
+exports.S_Usuario = S_Usuario;
 },{}],"node_modules/handlebars/dist/cjs/handlebars/utils.js":[function(require,module,exports) {
 'use strict';
 
@@ -9895,70 +9994,131 @@ if (typeof require !== 'undefined' && require.extensions) {
 },{"../dist/cjs/handlebars":"node_modules/handlebars/dist/cjs/handlebars.js","../dist/cjs/handlebars/compiler/printer":"node_modules/handlebars/dist/cjs/handlebars/compiler/printer.js","fs":"node_modules/parcel-bundler/src/builtins/_empty.js"}],"js/main.js":[function(require,module,exports) {
 "use strict";
 
-var _saludador = require("./saludador.js");
-
 var _API_puntos = require("./servicios/API_puntos.js");
+
+var _API_usuarios = require("./servicios/API_usuarios.js");
 
 var _handlebars = require("handlebars");
 
 //Archivo "main.js"
-var templateItem = "    \n  <td scope=\"col\">{{id}}</td>\n  <td scope=\"col\">{{name}}</td>\n  <td scope=\"col\"><a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\">Detalles</a></td>\n  <td scope=\"col\"><a id=\"enlace_delete_{{id}}\" href=\"javascript:borrarPunto({{id}})\"><i class=\"fa fa-eye\"></i>Borrar</a></td>    \n";
-var templateLista = "\n \n <table class=\"table table-dark\">\n    <thead>\n      <tr>\n        <td colspan=4><h2>Lista de la puntos</h2></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n          ".concat(templateItem, "\n        </tr>\n        {{/.}}      \n    </tbody>\n   </table>\n");
-var templateDetalles = "\n  <div class=\"row bg-dark\">\n    <div class=\"col-md-12\">\n    <h2>Detalles del punto con id: {{id}}</h2>\n    <form>\n      <div class=\"form-group\">\n          <label for=\"PointName\">Nombre del punto</label>\n          <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\" value=\"{{name}}\">\n      </div>\n      <div class=\"form-group\">\n          <label for=\"PointX\">Coordenada X</label>\n          <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\" value=\"{{coordX}}\">\n      </div>\n      <div class=\"form-group\">\n          <label for=\"PointY\">Coordenada Y</label>\n          <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\" value=\"{{coordY}}\">\n      </div>\n      <div class=\"form-group\">\n          <label for=\"PointZ\">Coordenada Z</label>\n          <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\" value=\"{{coordZ}}\">\n      </div>\n      <div class=\"form-group\">\n          <label for=\"Tipo\">Tipo de punto</label>\n          <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\" value=\"{{type_name}}\">\n      </div>\n      <button type=\"submit\">Guardar</button>\n      </form>\n    </div>\n  </div>\n";
-var formulario = "\n<form>\n<div class=\"form-group\">\n    <label for=\"PointName\">Nombre del punto</label>\n    <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\">\n</div>\n<div class=\"form-group\">\n    <label for=\"PointX\">Coordenada X</label>\n    <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\">\n</div>\n<div class=\"form-group\">\n    <label for=\"PointY\">Coordenada Y</label>\n    <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\">\n</div>\n<div class=\"form-group\">\n    <label for=\"PointZ\">Coordenada Z</label>\n    <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\">\n</div>\n<div class=\"form-group\">\n    <label for=\"Tipo\">Tipo de punto</label>\n    <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\">\n</div>\n</form>\n";
+//import {saludar} from './saludador.js'
+//import {obtenerPuntos,verDetalles,verListaPuntos,loadFormPuntos,borrarPunto,crearPunto} from './LN_puntos.js'
+var ActualPage = 0;
+var templateItem = "    \n  <td scope=\"col\">{{id}}</td>\n  <td scope=\"col\">{{name}}</td>\n  <td scope=\"col\"><a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\"><i class=\"fa fa-eye\">Detalles</i></a></td>\n  <td scope=\"col\"><a id=\"enlace_delete_{{id}}\" href=\"javascript:borrarPunto({{id}})\"><i class=\"fa fa-trash\"></i>Borrar</a></td>    \n";
+var templateLista = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de la puntos</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n          ".concat(templateItem, "\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(-1)\">Back</a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(1)\">Next</a></td>\n      </tr>\n    </tfooter>\n   </table>\n");
+var formulario = "\n  <form>\n  <div class=\"row bg-info\">\n    <div class=\"form-group col-md-2\">\n      <label for=\"PointID\">ID:</label>\n      <input class=\"form-control\" id=\"PointID\" name=\"PointID\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-10\">\n        <label for=\"PointName\">Nombre del punto</label>\n        <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointX\">CoordenadaX</label>\n        <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointY\">CoordenadaY</label>\n        <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointZ\">CoordenadaZ</label>\n        <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"Tipo\">Tipo de punto</label>\n        <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-8\">\n        <label for=\"TipoName\">Nombre del tipo:</label>\n        <input  class=\"form-control\" id=\"TipoName\" name=\"TipoName\" type=\"text\">\n    </div>\n    <input class=\"col-md-6\" type=\"button\" value=\"Crear\" id=\"boton_add_item\">\n    <input class=\"col-md-6\" type=\"button\" value=\"Actualizar\" id=\"boton_update_item\">\n    </div>\n  </form>\n\n";
+var login = "\n<form>\n    <div class=\"form-group\">\n        <label for=\"username\">Usuario</label>\n        <input class=\"form-control\" id=\"username\" name=\"username\" type=\"text\">\n    </div>\n    <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input class=\"form-control\" id=\"password\" name=\"password\" type=\"text\">\n    </div>\n    <button type=\"button\" id=\"loginButton\">Log in</button>\n    <button type=\"button\" id=\"registrarButton\">Registro</button>\n</form>\n";
 var tmpl_lista_compilada = (0, _handlebars.compile)(templateLista);
-var tmpl_item_compilada = (0, _handlebars.compile)(templateItem);
-var tmpl_detalle_compilada = (0, _handlebars.compile)(templateDetalles);
-var servicio_API = new _API_puntos.Servicio_API('http://localhost:3000');
+var url = 'http://localhost:3000';
+var servicio_API = new _API_puntos.Servicio_API(url);
+var servicio_Usuario = new _API_usuarios.S_Usuario(url);
+document.addEventListener('DOMContentLoaded', function () {
+  //document.getElementById('mensaje').innerHTML = saludar();
+  if (typeof Storage !== "undefined") {
+    var token = localStorage.getItem("token");
+    console.log(token);
+
+    if (token !== null) {
+      obtenerPuntos(-1);
+      loadFormPuntos();
+      document.getElementById("loginForm").innerHTML = "<button type=\"button\" id=\"logoutButton\">Exit</button>";
+      document.getElementById("logoutButton").addEventListener('click', function () {
+        localStorage.removeItem("token");
+        location.reload(true);
+      });
+    } else {
+      document.getElementById("loginForm").innerHTML = login;
+      document.getElementById("content").innerHTML = "Lo siento, debes logearte";
+      document.getElementById("loginButton").addEventListener('click', function () {
+        var us = document.getElementById("username").value;
+        var pass = document.getElementById("password").value;
+        servicio_Usuario.login(us, pass).then(function (datos) {
+          if (datos !== undefined) {
+            localStorage.setItem("token", datos.code);
+            location.reload(true);
+          } else {
+            document.getElementById("mensajeLogin").innerText = "Error en credenciales";
+          }
+        });
+      });
+      document.getElementById("registrarButton").addEventListener('click', function () {
+        var us = document.getElementById("username").value;
+        var pass = document.getElementById("password").value;
+        servicio_Usuario.registro(us, pass).then(function (datos) {
+          if (datos !== undefined) {
+            localStorage.setItem("token", datos.code);
+            location.reload(true);
+          } else {
+            document.getElementById("mensajeLogin").innerText = "Error en credenciales";
+          }
+        });
+      });
+    }
+  } else {
+    document.getElementById("content-left").innerHTML = "Lo siento, el navegador no soporta localstorage, por lo que algunas funciones no estaran disponibles";
+  }
+});
+
+function obtenerPuntos(page) {
+  ActualPage += page;
+  if (ActualPage < 0) ActualPage = 0;
+  servicio_API.obtenerPuntos(ActualPage).then(function (datos) {
+    var listaHTML = tmpl_lista_compilada(datos);
+    document.getElementById("content-left").innerHTML = listaHTML;
+  });
+}
+
+window.obtenerPuntos = obtenerPuntos;
 
 function verDetalles(id) {
   servicio_API.getPunto(id).then(function (datos) {
-    var listaHTML2 = tmpl_detalle_compilada(datos);
-    document.getElementById("content-right").innerHTML = listaHTML2;
+    console.log(datos);
+    document.getElementById("PointID").value = datos.id;
+    document.getElementById("PointName").value = datos.name;
+    document.getElementById("PointX").value = datos.coordX;
+    document.getElementById("PointY").value = datos.coordY;
+    document.getElementById("PointZ").value = datos.coordZ;
+    document.getElementById("Tipo").value = datos.type;
+    document.getElementById("TipoName").value = datos.type_name;
   });
 }
 
 window.verDetalles = verDetalles;
-document.addEventListener('DOMContentLoaded', function () {
-  //document.getElementById('mensaje').innerHTML = saludar();
-  servicio_API.obtenerPuntos().then(function (datos) {
-    var listaHTML = tmpl_lista_compilada(datos);
-    document.getElementById("content-left").innerHTML = listaHTML;
-  });
-});
-
-function verListaPuntos() {
-  servicio_API.obtenerPuntos().then(function (datos) {
-    var listaHTML = tmpl_lista_compilada(datos);
-    document.getElementById("content").innerHTML = "<div id=\"content-left\"></div><div id=\"content-right\"></div>";
-    document.getElementById("content-left").innerHTML = listaHTML;
-  });
-}
-
-window.verListaPuntos = verListaPuntos;
 
 function loadFormPuntos() {
-  document.getElementById("content").innerHTML = formulario;
+  document.getElementById("content-right").innerHTML = formulario;
+  document.getElementById("boton_add_item").addEventListener('click', function () {
+    var name = document.getElementById("PointName").value;
+    var coordx = document.getElementById("PointX").value;
+    var coordy = document.getElementById("PointY").value;
+    var coordz = document.getElementById("PointZ").value;
+    var type = document.getElementById("Tipo").value;
+    var token = localStorage.getItem("token");
+    servicio_API.crearPunto(name, coordx, coordy, coordz, type, token).then(function (resp) {});
+    console.log("Punto creado");
+  });
+  document.getElementById("boton_update_item").addEventListener('click', function () {
+    var id = document.getElementById("PointID").value;
+    var name = document.getElementById("PointName").value;
+    var coordx = document.getElementById("PointX").value;
+    var coordy = document.getElementById("PointY").value;
+    var coordz = document.getElementById("PointZ").value;
+    var type = document.getElementById("Tipo").value;
+    var token = localStorage.getItem("token");
+    servicio_API.actualizaPunto(id, name, coordx, coordy, coordz, type, token).then(function (resp) {});
+    alert("Punto actualizado");
+  });
 }
 
 window.loadFormPuntos = loadFormPuntos;
 
 function borrarPunto(id) {
   servicio_API.borrarPunto(id).then(function (datos) {});
+  alert("Punto borrado");
 }
 
 window.borrarPunto = borrarPunto;
-
-function crearPunto(id) {
-  servicio_API.crearPunto(id).then(function (datos) {//document.getElementById("content").innerHTML = "TODO se deberia hacer el delete del id: "+id;
-  });
-}
-
-window.crearPunto = crearPunto;
-document.getElementById("boton_add_item").addEventListener('click', function () {
-  servicio_API.crearPunto("").then(function (resp) {});
-});
-},{"./saludador.js":"js/saludador.js","./servicios/API_puntos.js":"js/servicios/API_puntos.js","handlebars":"node_modules/handlebars/lib/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./servicios/API_puntos.js":"js/servicios/API_puntos.js","./servicios/API_usuarios.js":"js/servicios/API_usuarios.js","handlebars":"node_modules/handlebars/lib/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -9985,7 +10145,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52242" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57315" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

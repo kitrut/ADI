@@ -2,8 +2,8 @@ export class Servicio_API{
     constructor(url){
         this.API_URL = url;
     }
-    obtenerPuntos(){
-        return fetch(this.API_URL+'/api/points')
+    obtenerPuntos(page){
+        return fetch(this.API_URL+'/api/points?limit=5&offset='+page)
             .then(function(response){
                 if(response.ok)
                     return response.json();
@@ -31,20 +31,51 @@ export class Servicio_API{
             },
             body: JSON.stringify({"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"})
         }).then(function (respuesta) {
-            if (respuesta.ok)
-               return respuesta.json()
+            return respuesta.json()
         })
     }
-    crearPunto(item){
+    crearPunto(name,coordx,coordy,coordz,type,token){
         return fetch(this.API_URL+'/api/points', {
             method: 'POST',
             headers: {
                 'Content-type':'application/json'
             },
-            body: JSON.stringify({"name":"Punto nuevo","coordX":"1","coordY":"2","coordZ":"3","type":"2","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"})
+            body: JSON.stringify({"name":name,"coordX":coordx,"coordY":coordy,"coordZ":coordz,"type":type,"token":token})
         }).then(function (respuesta) {
-            if (respuesta.ok)
-               return respuesta.json()
+            return respuesta.json()
+        })
+    }
+    actualizaPunto(id,name,coordx,coordy,coordz,type,token){
+        return fetch(this.API_URL+'/api/points/'+id, {
+            method: 'PUT',
+            headers: {
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({"name":name,"coordX":coordx,"coordY":coordy,"coordZ":coordz,"type":type,"token":token})
+        }).then(function (respuesta) {
+            return respuesta.json()
+        })
+    }
+    login(usuario,password){
+        return fetch(this.API_URL+'/login', {
+            method: 'POST',
+            headers: {
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({"usuario":usuario,"password":password})
+        }).then(function (respuesta) {
+            return respuesta.json()
+        })
+    }
+    registro(usuario,password){
+        return fetch(this.API_URL+'/registro', {
+            method: 'POST',
+            headers: {
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({"usuario":usuario,"password":password})
+        }).then(function (respuesta) {
+            return respuesta.json()
         })
     }
 }
