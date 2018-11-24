@@ -41,6 +41,17 @@ export class Servicio_API{
             return respuesta.status
         })
     }
+    borrarTipo(id){
+        return fetch(this.API_URL+'/api/types/'+id, {
+            method: 'DELETE',
+            headers: {
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"})
+        }).then(function (respuesta) {
+            return respuesta.status
+        })
+    }
     crearPunto(name,coordx,coordy,coordz,type,token){
         return fetch(this.API_URL+'/api/points', {
             method: 'POST',

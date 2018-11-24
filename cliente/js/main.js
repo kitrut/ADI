@@ -256,7 +256,10 @@ function verDetallesTipo(id){
 }
 window.verDetallesTipo = verDetallesTipo;
 
-function borrarTipo(){
-  alert("TODO");
+function borrarTipo(id){
+  servicio_API.borrarTipo(id).then(function(datos){
+    obtenerTipos(0);
+    obtenerPuntos(0);
+  })
 }
 window.borrarTipo = borrarTipo;

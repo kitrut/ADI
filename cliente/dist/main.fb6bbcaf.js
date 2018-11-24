@@ -172,6 +172,21 @@ function () {
       });
     }
   }, {
+    key: "borrarTipo",
+    value: function borrarTipo(id) {
+      return fetch(this.API_URL + '/api/types/' + id, {
+        method: 'DELETE',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"
+        })
+      }).then(function (respuesta) {
+        return respuesta.status;
+      });
+    }
+  }, {
     key: "crearPunto",
     value: function crearPunto(name, coordx, coordy, coordz, type, token) {
       return fetch(this.API_URL + '/api/points', {
@@ -10150,8 +10165,11 @@ function verDetallesTipo(id) {
 
 window.verDetallesTipo = verDetallesTipo;
 
-function borrarTipo() {
-  alert("TODO");
+function borrarTipo(id) {
+  servicio_API.borrarTipo(id).then(function (datos) {
+    obtenerTipos(0);
+    obtenerPuntos(0);
+  });
 }
 
 window.borrarTipo = borrarTipo;
@@ -10182,7 +10200,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56714" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58263" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
