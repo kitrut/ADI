@@ -17,7 +17,7 @@ database = {
             console.log("Se han eliminado todas las tablas de la base de datos")
 
             console.log("Creando base de datos y ejecutando seeders...");
-
+            db.run('PRAGMA foreign_keys = ON');
             db.run('CREATE TABLE usuario (name TEXT PRIMARY KEY,token TEXT)');
             var stmt = db.prepare('INSERT INTO usuario VALUES (?,?)');
             stmt.run("root",jwt.encode(1,secret));
@@ -30,11 +30,11 @@ database = {
             }
             stmt.finalize();          
             
-            db.run('CREATE TABLE point (id INTEGER PRIMARY KEY,name TEXT,coordX TEXT,coordY TEXT,coordZ TEXT,type INTEGER, FOREIGN KEY(type) REFERENCES type(id))');
+            db.run('CREATE TABLE point (id INTEGER PRIMARY KEY,name TEXT,coordX TEXT,coordY TEXT,coordZ TEXT,type INTEGER, CONSTRAINT fk_type_point FOREIGN KEY(type) REFERENCES type(id) ON DELETE SET NULL)');
             stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?,?)');
             
             for (var i = 0; i < 10; i++) {
-              stmt.run(null,"Punto "+i,0,0,0,1);
+              stmt.run(null,"Punto "+i,0,0,0,Math.floor(Math.random() * (6 - 1)) + 1);
             }
             
             stmt.finalize();

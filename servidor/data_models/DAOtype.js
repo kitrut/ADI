@@ -31,7 +31,13 @@ DAOtype={
             }
             else resp.status(404).send({"error":1,"message":"El recurso no existe"});
         });
-    }
+    },
+    delete:function(req,resp,db){
+        db.run("DELETE FROM type where id="+req.params.id,function(err){
+            if(err) resp.status(400).send(err);
+            else resp.status(202).send();
+        })
+    },
 }
 
 module.exports = DAOtype;

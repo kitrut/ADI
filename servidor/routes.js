@@ -45,6 +45,7 @@ router.post('/logout',function(req,resp){DAOuser.logout(req,resp)});
 
 // PARTE PÚBLICA 
 router.get('/api/types/:id/points',function(req,resp){DAOtype.findWithPoint(req,resp,db)});
+router.delete('/api/types/:id',checkAuth,function(req,resp){DAOtype.delete(req,resp,db)})
 router.get('/api/types/:id',function(req,res){DAOtype.find(req,res,db)});
 router.get('/api/types',function(req,resp){DAOtype.all(req,resp,db)});
 
