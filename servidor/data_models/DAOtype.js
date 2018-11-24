@@ -34,8 +34,13 @@ DAOtype={
     },
     delete:function(req,resp,db){
         db.run("DELETE FROM type where id="+req.params.id,function(err){
-            if(err) resp.status(400).send(err);
-            else resp.status(202).send();
+            if(err) resp.status(500).send(err);
+            else{
+                db.run("DELETE FROM point where type="+req.params.id,function(err){
+                    if(err) resp.status(500).send(err);
+                    else resp.status(202).send();
+                })
+            }
         })
     },
 }
