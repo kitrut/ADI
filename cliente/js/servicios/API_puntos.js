@@ -16,8 +16,15 @@ export class Servicio_API{
                     return response.json();
             })
     }
-    obtenerTipos(){
-        return fetch(this.API_URL+'/api/types')
+    obtenerTipos(page){
+        return fetch(this.API_URL+'/api/types?limit=5&offset='+page)//?limit='+limit+'&offset='+page)
+            .then(function(response){
+                if(response.ok)
+                    return response.json();
+            })
+    }
+    getTipo(id){
+        return fetch(this.API_URL+'/api/types/'+id)
             .then(function(response){
                 if(response.ok)
                     return response.json();

@@ -7,7 +7,13 @@ DAOtype={
         });
     },
     all:function(req,resp,db){
-        db.all("Select * from type",(err,row)=>{                    
+        var sql = "SELECT * FROM type";
+        var limit = 4;
+        var offset = limit;
+        if(req.query.limit) limit = req.query.limit;    
+        if(req.query.offset) offset = req.query.offset * limit;
+        if(req.query.limit && req.query.offset) sql += (" Limit "+limit+" OFFSET "+offset);
+        db.all(sql,(err,row)=>{                    
             if(row && err === null) resp.send(row);
             else resp.status(404).send(errors[1]);
         });

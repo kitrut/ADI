@@ -7,12 +7,7 @@ import { compile } from 'handlebars';
 
 
 var ActualPage = 0;
-var templateItem = `    
-  <td scope="col">{{id}}</td>
-  <td scope="col">{{name}}</td>
-  <td scope="col"><a id="enlace_{{id}}" href="javascript:verDetalles({{id}})"><i class="fa fa-eye fa-2x" style="color:green"></i></a></td>
-  <td scope="col"><a id="enlace_delete_{{id}}" href="javascript:borrarPunto({{id}})"><i class="fa fa-trash fa-2x" style="color:red"></i></a></td>    
-`
+var ActualPageTipos = 0;
 
 var templateLista = ` 
  <table class="table table-dark table-bordered table-hover">
@@ -28,7 +23,10 @@ var templateLista = `
     <tbody>
         {{#.}}
         <tr>
-          ${templateItem}
+        <td scope="col">{{id}}</td>
+        <td scope="col">{{name}}</td>
+        <td scope="col"><a id="enlace_{{id}}" href="javascript:verDetalles({{id}})"><i class="fa fa-eye fa-2x" style="color:green"></i></a></td>
+        <td scope="col"><a id="enlace_delete_{{id}}" href="javascript:borrarPunto({{id}})"><i class="fa fa-trash fa-2x" style="color:red"></i></a></td>
         </tr>
         {{/.}}      
     </tbody>
@@ -37,6 +35,36 @@ var templateLista = `
         <td scope="col" colspan=2></td>
         <td scope="col"><a href="javascript:obtenerPuntos(-1)"><i class="fas fa-step-backward fa-2x" style="color:white"></i></a></td>
         <td scope="col"><a href="javascript:obtenerPuntos(1)"><i class="fas fa-step-forward fa-2x" style="color:white"></i></a></td>
+      </tr>
+    </tfooter>
+   </table>
+` 
+var templateListaTipos = ` 
+ <table class="table table-dark table-bordered table-hover">
+    <thead>
+      <tr>
+        <td colspan=4><h3>Lista de tipos de punto</h3></td>
+      </tr>
+      <tr>
+        <td scope="col">#</td>
+        <td scope="col" colspan=3>Nombre</td>
+      </tr>
+    </thead>
+    <tbody>
+        {{#.}}
+        <tr>
+          <td scope="col">{{id}}</td>
+          <td scope="col">{{type_name}}</td>
+          <td scope="col"><a id="enlace_tipo_{{id}}" href="javascript:verDetallesTipo({{id}})"><i class="fa fa-eye fa-2x" style="color:green"></i></a></td>
+          <td scope="col"><a id="enlace_tipo_delete_{{id}}" href="javascript:borrarTipo({{id}})"><i class="fa fa-trash fa-2x" style="color:red"></i></a></td>
+        </tr>
+        {{/.}}      
+    </tbody>
+    <tfooter>
+      <tr>
+        <td scope="col" colspan=2></td>
+        <td scope="col"><a href="javascript:obtenerTipos(-1)"><i class="fas fa-step-backward fa-2x" style="color:white"></i></a></td>
+        <td scope="col"><a href="javascript:obtenerTipos(1)"><i class="fas fa-step-forward fa-2x" style="color:white"></i></a></td>
       </tr>
     </tfooter>
    </table>
@@ -99,6 +127,7 @@ var login = `
 </form>
 `
 var tmpl_lista_compilada = compile(templateLista)
+var tmpl_listatipos_compilada = compile(templateListaTipos)
 
 var url = 'http://localhost:3000';
 var servicio_API = new Servicio_API(url)
@@ -110,8 +139,10 @@ document.addEventListener('DOMContentLoaded', function() {
       var token = localStorage.getItem("token");
       if(token !== null){
         obtenerPuntos(-1);
+        obtenerTipos(0);
         loadFormPuntos();
-        document.getElementById("loginForm").innerHTML = `<button type="button" id="logoutButton"><i class="fas fa-sign-out-alt"></i>Exit</button>`; 
+        var nombre = localStorage.getItem("nombre");
+        document.getElementById("loginForm").innerHTML = `Usuario<button type="button" id="logoutButton" class="bg-danger"><i class="fas fa-sign-out-alt"></i>Exit</button>`; 
         document.getElementById("logoutButton").addEventListener('click',function(){
           localStorage.removeItem("token");
           location.reload(true);
@@ -127,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
               localStorage.setItem("token",datos.code)
               location.reload(true);
             }else{
-              document.getElementById("mensajeLogin").innerText = "Error en credenciales";
+              alert("Usuario o contraseña incorrecto, por favor introduce de nuevo o registrate si eres nuevo usuario")
             }
           })
         })
@@ -135,10 +166,10 @@ document.addEventListener('DOMContentLoaded', function() {
           var us = document.getElementById("username").value;
           var pass = document.getElementById("password").value;
           servicio_Usuario.registro(us,pass).then(function(datos){
-            if(datos!==undefined){              
+            if(datos!==undefined){       
               location.reload(true);
             }else{
-              document.getElementById("mensajeLogin").innerText = "Error en credenciales";
+              alert("Ha ocurrido un error en el registro, introduce otros credenciales");
             } 
           })
         })
@@ -158,6 +189,16 @@ function obtenerPuntos(page){
   })
 }
 window.obtenerPuntos = obtenerPuntos;
+
+function obtenerTipos(page){
+  ActualPageTipos += page;
+  if(ActualPageTipos<0) ActualPageTipos=0;
+  servicio_API.obtenerTipos(ActualPageTipos).then(function(datos){
+    var listaHTML = tmpl_listatipos_compilada(datos)
+    document.getElementById("content-center").innerHTML = listaHTML; 
+  })
+}
+window.obtenerTipos = obtenerTipos;
 
 function verDetalles(id){
   servicio_API.getPunto(id).then(function(datos){
@@ -207,3 +248,15 @@ function borrarPunto(id){
   })  
 }
 window.borrarPunto = borrarPunto;
+
+function verDetallesTipo(id){
+  servicio_API.getTipo(id).then(function(datos){
+    alert(datos.desc)
+  })
+}
+window.verDetallesTipo = verDetallesTipo;
+
+function borrarTipo(){
+  alert("TODO");
+}
+window.borrarTipo = borrarTipo;
