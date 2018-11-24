@@ -5,12 +5,13 @@ import {Servicio_API} from './servicios/API_puntos.js'
 import {S_Usuario} from './servicios/API_usuarios.js'
 import { compile } from 'handlebars';
 
+
 var ActualPage = 0;
 var templateItem = `    
   <td scope="col">{{id}}</td>
   <td scope="col">{{name}}</td>
-  <td scope="col"><a id="enlace_{{id}}" href="javascript:verDetalles({{id}})"><i class="fa fa-eye">Detalles</i></a></td>
-  <td scope="col"><a id="enlace_delete_{{id}}" href="javascript:borrarPunto({{id}})"><i class="fa fa-trash"></i>Borrar</a></td>    
+  <td scope="col"><a id="enlace_{{id}}" href="javascript:verDetalles({{id}})"><i class="fa fa-eye fa-2x" style="color:green"></i></a></td>
+  <td scope="col"><a id="enlace_delete_{{id}}" href="javascript:borrarPunto({{id}})"><i class="fa fa-trash fa-2x" style="color:red"></i></a></td>    
 `
 
 var templateLista = ` 
@@ -34,8 +35,8 @@ var templateLista = `
     <tfooter>
       <tr>
         <td scope="col" colspan=2></td>
-        <td scope="col"><a href="javascript:obtenerPuntos(-1)">Back</a></td>
-        <td scope="col"><a href="javascript:obtenerPuntos(1)">Next</a></td>
+        <td scope="col"><a href="javascript:obtenerPuntos(-1)"><i class="fas fa-step-backward fa-2x" style="color:white"></i></a></td>
+        <td scope="col"><a href="javascript:obtenerPuntos(1)"><i class="fas fa-step-forward fa-2x" style="color:white"></i></a></td>
       </tr>
     </tfooter>
    </table>
@@ -43,7 +44,7 @@ var templateLista = `
 
 var formulario = `
   <form>
-  <div class="row bg-info">
+  <div class="row bg-info"  style="height:97%">
     <div class="form-group col-md-2">
       <label for="PointID">ID:</label>
       <input class="form-control" id="PointID" name="PointID" type="text">
@@ -72,8 +73,13 @@ var formulario = `
         <label for="TipoName">Nombre del tipo:</label>
         <input  class="form-control" id="TipoName" name="TipoName" type="text">
     </div>
-    <input class="col-md-6" type="button" value="Crear" id="boton_add_item">
-    <input class="col-md-6" type="button" value="Actualizar" id="boton_update_item">
+    <!--<div class="form-group col-md-12">
+        <label for="aux">Nombre del tipo:</label>
+        <select id="selectTipos"></select>
+        <input  class="form-control" id="aux" name="aux" type="text">
+    </div>-->
+    <input class="col-md-6 btn-success" type="button" value="Crear" id="boton_add_item">
+    <input class="col-md-6 btn-warning" type="button" value="Actualizar" id="boton_update_item">
     </div>
   </form>
 
@@ -102,11 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
     //document.getElementById('mensaje').innerHTML = saludar();
     if(typeof(Storage) !== "undefined"){
       var token = localStorage.getItem("token");
-      console.log(token)
       if(token !== null){
         obtenerPuntos(-1);
         loadFormPuntos();
-        document.getElementById("loginForm").innerHTML = `<button type="button" id="logoutButton">Exit</button>`; 
+        document.getElementById("loginForm").innerHTML = `<button type="button" id="logoutButton"><i class="fas fa-sign-out-alt"></i>Exit</button>`; 
         document.getElementById("logoutButton").addEventListener('click',function(){
           localStorage.removeItem("token");
           location.reload(true);
@@ -130,8 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var us = document.getElementById("username").value;
           var pass = document.getElementById("password").value;
           servicio_Usuario.registro(us,pass).then(function(datos){
-            if(datos!==undefined){
-              localStorage.setItem("token",datos.code)
+            if(datos!==undefined){              
               location.reload(true);
             }else{
               document.getElementById("mensajeLogin").innerText = "Error en credenciales";
@@ -157,7 +161,6 @@ window.obtenerPuntos = obtenerPuntos;
 
 function verDetalles(id){
   servicio_API.getPunto(id).then(function(datos){
-    console.log(datos)
     document.getElementById("PointID").value = datos.id;
     document.getElementById("PointName").value = datos.name;
     document.getElementById("PointX").value = datos.coordX;
@@ -178,8 +181,9 @@ function loadFormPuntos(){
     var coordz= document.getElementById("PointZ").value;
     var type= document.getElementById("Tipo").value;
     var token= localStorage.getItem("token");
-    servicio_API.crearPunto(name,coordx,coordy,coordz,type,token).then(function(resp){});
-    console.log("Punto creado");
+    servicio_API.crearPunto(name,coordx,coordy,coordz,type,token).then(function(resp){
+      obtenerPuntos(0)
+    });
   })
   document.getElementById("boton_update_item").addEventListener('click',function(){
     var id = document.getElementById("PointID").value;
@@ -189,15 +193,17 @@ function loadFormPuntos(){
     var coordz= document.getElementById("PointZ").value;
     var type= document.getElementById("Tipo").value;
     var token= localStorage.getItem("token");
-    servicio_API.actualizaPunto(id,name,coordx,coordy,coordz,type,token).then(function(resp){});
-    alert("Punto actualizado")
+    servicio_API.actualizaPunto(id,name,coordx,coordy,coordz,type,token).then(function(resp){
+      obtenerPuntos(0)
+    });
+    
   })
 }
 window.loadFormPuntos = loadFormPuntos;
 
 function borrarPunto(id){
-  servicio_API.borrarPunto(id).then(function(datos){})
-  alert("Punto borrado")
-  
+  servicio_API.borrarPunto(id).then(function(datos){
+    obtenerPuntos(0)
+  })  
 }
 window.borrarPunto = borrarPunto;

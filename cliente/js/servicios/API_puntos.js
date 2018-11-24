@@ -31,7 +31,7 @@ export class Servicio_API{
             },
             body: JSON.stringify({"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"})
         }).then(function (respuesta) {
-            return respuesta.json()
+            return respuesta.status
         })
     }
     crearPunto(name,coordx,coordy,coordz,type,token){
@@ -42,7 +42,7 @@ export class Servicio_API{
             },
             body: JSON.stringify({"name":name,"coordX":coordx,"coordY":coordy,"coordZ":coordz,"type":type,"token":token})
         }).then(function (respuesta) {
-            return respuesta.json()
+            return respuesta.status
         })
     }
     actualizaPunto(id,name,coordx,coordy,coordz,type,token){
@@ -53,7 +53,7 @@ export class Servicio_API{
             },
             body: JSON.stringify({"name":name,"coordX":coordx,"coordY":coordy,"coordZ":coordz,"type":type,"token":token})
         }).then(function (respuesta) {
-            return respuesta.json()
+            return respuesta.status
         })
     }
     login(usuario,password){
@@ -64,7 +64,7 @@ export class Servicio_API{
             },
             body: JSON.stringify({"usuario":usuario,"password":password})
         }).then(function (respuesta) {
-            return respuesta.json()
+            return respuesta
         })
     }
     registro(usuario,password){
@@ -75,7 +75,7 @@ export class Servicio_API{
             },
             body: JSON.stringify({"usuario":usuario,"password":password})
         }).then(function (respuesta) {
-            return respuesta.json()
+            return respuesta
         })
     }
 }

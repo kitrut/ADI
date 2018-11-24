@@ -14,7 +14,7 @@ DAOuser ={
     },
     registro:function(req,resp,db){
         var stmt = db.prepare('INSERT INTO usuario VALUES (?,?)');
-        var token = jwt.encode(req.body.password,secret);
+        var token = jwt.encode(req.body.usuario+req.body.password,secret);
         stmt.run(req.body.usuario,token,function(err){
             if(err){
                 resp.status(400).send({"error":"nombre de usuario no disponible"});
@@ -28,7 +28,7 @@ DAOuser ={
         db.get('SELECT * FROM usuario WHERE name="'+req.body.usuario+'"',function(err,row){
             if(err)resp.status(500).send(err);
             else if(row){
-                var token = jwt.encode(req.body.password,secret);
+                var token = jwt.encode(req.body.usuario+req.body.password,secret);
                 if(row.token==token) resp.send({"code":token});
                 else resp.status(401).send({"error":"Usuario no autorizado"});                
             }

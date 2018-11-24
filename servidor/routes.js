@@ -9,13 +9,12 @@ var DAOtype = require('./data_models/DAOtype');
 var DAOuser = require('./data_models/DAOuser');
 
 function checkAuth(req,resp,next){
-    console.log("Peticion en servidor: "+req.path);
-    /*if(req.body.token){
+    if(req.body.token){
         db.get('SELECT * FROM usuario WHERE token="'+req.body.token+'"',function(err,row){
             if(err) resp.status(500).send({"error":"Error en BBDD"});
             else if(row){
                 if(row.token===req.body.token){
-                    console.log("El usuario "+row.name+" ha solicitado el recurso: "+req.path);
+                    console.log("El usuario "+row.name+" ha solicitado el recurso: "+req.url);
                     next();               
                 }else{
                     resp.status(401).send({"error":"No estas autorizado, debes registrarte"});
@@ -23,8 +22,7 @@ function checkAuth(req,resp,next){
             }
             else resp.status(401).send({"error":"No estas autorizado, debes registrarte"});              
         })
-    }else resp.status(401).send({"error":"No estas autorizado, debes registrarte"}); */
-    next();
+    }else resp.status(401).send({"error":"No estas autorizado, debes registrarte"});
 }
 
 

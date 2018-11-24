@@ -160,7 +160,7 @@ function () {
           "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.1omsSUiynMH5b3QMpOxjwxflAWJilYvVWvzu8riGeuE"
         })
       }).then(function (respuesta) {
-        return respuesta.json();
+        return respuesta.status;
       });
     }
   }, {
@@ -180,7 +180,7 @@ function () {
           "token": token
         })
       }).then(function (respuesta) {
-        return respuesta.json();
+        return respuesta.status;
       });
     }
   }, {
@@ -200,7 +200,7 @@ function () {
           "token": token
         })
       }).then(function (respuesta) {
-        return respuesta.json();
+        return respuesta.status;
       });
     }
   }, {
@@ -216,7 +216,7 @@ function () {
           "password": password
         })
       }).then(function (respuesta) {
-        return respuesta.json();
+        return respuesta;
       });
     }
   }, {
@@ -232,7 +232,7 @@ function () {
           "password": password
         })
       }).then(function (respuesta) {
-        return respuesta.json();
+        return respuesta;
       });
     }
   }]);
@@ -10004,9 +10004,9 @@ var _handlebars = require("handlebars");
 //import {saludar} from './saludador.js'
 //import {obtenerPuntos,verDetalles,verListaPuntos,loadFormPuntos,borrarPunto,crearPunto} from './LN_puntos.js'
 var ActualPage = 0;
-var templateItem = "    \n  <td scope=\"col\">{{id}}</td>\n  <td scope=\"col\">{{name}}</td>\n  <td scope=\"col\"><a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\"><i class=\"fa fa-eye\">Detalles</i></a></td>\n  <td scope=\"col\"><a id=\"enlace_delete_{{id}}\" href=\"javascript:borrarPunto({{id}})\"><i class=\"fa fa-trash\"></i>Borrar</a></td>    \n";
-var templateLista = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de la puntos</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n          ".concat(templateItem, "\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(-1)\">Back</a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(1)\">Next</a></td>\n      </tr>\n    </tfooter>\n   </table>\n");
-var formulario = "\n  <form>\n  <div class=\"row bg-info\">\n    <div class=\"form-group col-md-2\">\n      <label for=\"PointID\">ID:</label>\n      <input class=\"form-control\" id=\"PointID\" name=\"PointID\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-10\">\n        <label for=\"PointName\">Nombre del punto</label>\n        <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointX\">CoordenadaX</label>\n        <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointY\">CoordenadaY</label>\n        <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointZ\">CoordenadaZ</label>\n        <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"Tipo\">Tipo de punto</label>\n        <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-8\">\n        <label for=\"TipoName\">Nombre del tipo:</label>\n        <input  class=\"form-control\" id=\"TipoName\" name=\"TipoName\" type=\"text\">\n    </div>\n    <input class=\"col-md-6\" type=\"button\" value=\"Crear\" id=\"boton_add_item\">\n    <input class=\"col-md-6\" type=\"button\" value=\"Actualizar\" id=\"boton_update_item\">\n    </div>\n  </form>\n\n";
+var templateItem = "    \n  <td scope=\"col\">{{id}}</td>\n  <td scope=\"col\">{{name}}</td>\n  <td scope=\"col\"><a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\"><i class=\"fa fa-eye fa-2x\" style=\"color:green\"></i></a></td>\n  <td scope=\"col\"><a id=\"enlace_delete_{{id}}\" href=\"javascript:borrarPunto({{id}})\"><i class=\"fa fa-trash fa-2x\" style=\"color:red\"></i></a></td>    \n";
+var templateLista = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de la puntos</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n          ".concat(templateItem, "\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(-1)\"><i class=\"fas fa-step-backward fa-2x\" style=\"color:white\"></i></a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(1)\"><i class=\"fas fa-step-forward fa-2x\" style=\"color:white\"></i></a></td>\n      </tr>\n    </tfooter>\n   </table>\n");
+var formulario = "\n  <form>\n  <div class=\"row bg-info\"  style=\"height:97%\">\n    <div class=\"form-group col-md-2\">\n      <label for=\"PointID\">ID:</label>\n      <input class=\"form-control\" id=\"PointID\" name=\"PointID\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-10\">\n        <label for=\"PointName\">Nombre del punto</label>\n        <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointX\">CoordenadaX</label>\n        <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointY\">CoordenadaY</label>\n        <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointZ\">CoordenadaZ</label>\n        <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"Tipo\">Tipo de punto</label>\n        <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-8\">\n        <label for=\"TipoName\">Nombre del tipo:</label>\n        <input  class=\"form-control\" id=\"TipoName\" name=\"TipoName\" type=\"text\">\n    </div>\n    <!--<div class=\"form-group col-md-12\">\n        <label for=\"aux\">Nombre del tipo:</label>\n        <select id=\"selectTipos\"></select>\n        <input  class=\"form-control\" id=\"aux\" name=\"aux\" type=\"text\">\n    </div>-->\n    <input class=\"col-md-6 btn-success\" type=\"button\" value=\"Crear\" id=\"boton_add_item\">\n    <input class=\"col-md-6 btn-warning\" type=\"button\" value=\"Actualizar\" id=\"boton_update_item\">\n    </div>\n  </form>\n\n";
 var login = "\n<form>\n    <div class=\"form-group\">\n        <label for=\"username\">Usuario</label>\n        <input class=\"form-control\" id=\"username\" name=\"username\" type=\"text\">\n    </div>\n    <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input class=\"form-control\" id=\"password\" name=\"password\" type=\"text\">\n    </div>\n    <button type=\"button\" id=\"loginButton\">Log in</button>\n    <button type=\"button\" id=\"registrarButton\">Registro</button>\n</form>\n";
 var tmpl_lista_compilada = (0, _handlebars.compile)(templateLista);
 var url = 'http://localhost:3000';
@@ -10016,12 +10016,11 @@ document.addEventListener('DOMContentLoaded', function () {
   //document.getElementById('mensaje').innerHTML = saludar();
   if (typeof Storage !== "undefined") {
     var token = localStorage.getItem("token");
-    console.log(token);
 
     if (token !== null) {
       obtenerPuntos(-1);
       loadFormPuntos();
-      document.getElementById("loginForm").innerHTML = "<button type=\"button\" id=\"logoutButton\">Exit</button>";
+      document.getElementById("loginForm").innerHTML = "<button type=\"button\" id=\"logoutButton\"><i class=\"fas fa-sign-out-alt\"></i>Exit</button>";
       document.getElementById("logoutButton").addEventListener('click', function () {
         localStorage.removeItem("token");
         location.reload(true);
@@ -10046,7 +10045,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var pass = document.getElementById("password").value;
         servicio_Usuario.registro(us, pass).then(function (datos) {
           if (datos !== undefined) {
-            localStorage.setItem("token", datos.code);
             location.reload(true);
           } else {
             document.getElementById("mensajeLogin").innerText = "Error en credenciales";
@@ -10072,7 +10070,6 @@ window.obtenerPuntos = obtenerPuntos;
 
 function verDetalles(id) {
   servicio_API.getPunto(id).then(function (datos) {
-    console.log(datos);
     document.getElementById("PointID").value = datos.id;
     document.getElementById("PointName").value = datos.name;
     document.getElementById("PointX").value = datos.coordX;
@@ -10094,8 +10091,9 @@ function loadFormPuntos() {
     var coordz = document.getElementById("PointZ").value;
     var type = document.getElementById("Tipo").value;
     var token = localStorage.getItem("token");
-    servicio_API.crearPunto(name, coordx, coordy, coordz, type, token).then(function (resp) {});
-    console.log("Punto creado");
+    servicio_API.crearPunto(name, coordx, coordy, coordz, type, token).then(function (resp) {
+      obtenerPuntos(0);
+    });
   });
   document.getElementById("boton_update_item").addEventListener('click', function () {
     var id = document.getElementById("PointID").value;
@@ -10105,16 +10103,18 @@ function loadFormPuntos() {
     var coordz = document.getElementById("PointZ").value;
     var type = document.getElementById("Tipo").value;
     var token = localStorage.getItem("token");
-    servicio_API.actualizaPunto(id, name, coordx, coordy, coordz, type, token).then(function (resp) {});
-    alert("Punto actualizado");
+    servicio_API.actualizaPunto(id, name, coordx, coordy, coordz, type, token).then(function (resp) {
+      obtenerPuntos(0);
+    });
   });
 }
 
 window.loadFormPuntos = loadFormPuntos;
 
 function borrarPunto(id) {
-  servicio_API.borrarPunto(id).then(function (datos) {});
-  alert("Punto borrado");
+  servicio_API.borrarPunto(id).then(function (datos) {
+    obtenerPuntos(0);
+  });
 }
 
 window.borrarPunto = borrarPunto;
@@ -10145,7 +10145,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57315" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52349" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
