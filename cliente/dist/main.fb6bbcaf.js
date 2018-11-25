@@ -10021,43 +10021,302 @@ if (typeof require !== 'undefined' && require.extensions) {
   require.extensions['.handlebars'] = extension;
   require.extensions['.hbs'] = extension;
 }
-},{"../dist/cjs/handlebars":"node_modules/handlebars/dist/cjs/handlebars.js","../dist/cjs/handlebars/compiler/printer":"node_modules/handlebars/dist/cjs/handlebars/compiler/printer.js","fs":"node_modules/parcel-bundler/src/builtins/_empty.js"}],"js/main.js":[function(require,module,exports) {
+},{"../dist/cjs/handlebars":"node_modules/handlebars/dist/cjs/handlebars.js","../dist/cjs/handlebars/compiler/printer":"node_modules/handlebars/dist/cjs/handlebars/compiler/printer.js","fs":"node_modules/parcel-bundler/src/builtins/_empty.js"}],"js/LN_puntos.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _API_puntos = require("./servicios/API_puntos");
+
+var _handlebars = require("handlebars");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var url = 'http://localhost:3000';
+var servicio_API = new _API_puntos.Servicio_API(url);
+var formulario = "\n  <form>\n  <div class=\"row bg-success\"  style=\"height:97%\">\n    <div class=\"form-group col-md-2\">\n      <label for=\"PointID\">ID:</label>\n      <input class=\"form-control\" id=\"PointID\" name=\"PointID\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-10\">\n        <label for=\"PointName\">Nombre del punto</label>\n        <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointX\">CoordenadaX</label>\n        <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointY\">CoordenadaY</label>\n        <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointZ\">CoordenadaZ</label>\n        <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"Tipo\">Tipo de punto</label>\n        <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-8\">\n        <label for=\"TipoName\">Nombre del tipo:</label>\n        <input  class=\"form-control\" id=\"TipoName\" name=\"TipoName\" type=\"text\">\n    </div>\n    <!--<div class=\"form-group col-md-12\">\n        <label for=\"aux\">Nombre del tipo:</label>\n        <select id=\"selectTipos\"></select>\n        <input  class=\"form-control\" id=\"aux\" name=\"aux\" type=\"text\">\n    </div>-->\n    <input class=\"col-md-6 btn-success\" type=\"button\" value=\"Crear\" id=\"boton_add_item\">\n    <input class=\"col-md-6 btn-warning\" type=\"button\" value=\"Actualizar\" id=\"boton_update_item\">\n    </div>\n  </form>\n\n";
+var templateLista = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de la puntos</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n        <td scope=\"col\">{{id}}</td>\n        <td scope=\"col\">{{name}}</td>\n        <td scope=\"col\"><a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\"><i class=\"fa fa-eye fa-2x\" style=\"color:green\"></i></a></td>\n        <td scope=\"col\"><a id=\"enlace_delete_{{id}}\" href=\"javascript:borrarPunto({{id}})\"><i class=\"fa fa-trash fa-2x\" style=\"color:red\"></i></a></td>\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(-1)\"><i class=\"fas fa-step-backward fa-2x\" style=\"color:white\"></i></a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(1)\"><i class=\"fas fa-step-forward fa-2x\" style=\"color:white\"></i></a></td>\n      </tr>\n    </tfooter>\n   </table>\n";
+var tmpl_lista_compilada = (0, _handlebars.compile)(templateLista);
+var ActualPage = 0;
+"use strict";
+
+var LN_puntos =
+/*#__PURE__*/
+function () {
+  function LN_puntos() {
+    _classCallCheck(this, LN_puntos);
+
+    this.formulario = formulario;
+    this.tmpl_lista_compilada = tmpl_lista_compilada;
+  }
+
+  _createClass(LN_puntos, [{
+    key: "obtenerPuntos",
+    value: function obtenerPuntos(page) {
+      ActualPage += page;
+      if (ActualPage < 0) ActualPage = 0;
+      servicio_API.obtenerPuntos(ActualPage).then(function (datos) {
+        return document.getElementById("content-left").innerHTML = tmpl_lista_compilada(datos);
+      });
+    }
+  }, {
+    key: "verDetalles",
+    value: function verDetalles(id) {
+      servicio_API.getPunto(id).then(function (datos) {
+        document.getElementById("PointID").value = datos.id;
+        document.getElementById("PointName").value = datos.name;
+        document.getElementById("PointX").value = datos.coordX;
+        document.getElementById("PointY").value = datos.coordY;
+        document.getElementById("PointZ").value = datos.coordZ;
+        document.getElementById("Tipo").value = datos.type;
+        document.getElementById("TipoName").value = datos.type_name;
+      });
+    }
+  }, {
+    key: "loadFormPuntos",
+    value: function loadFormPuntos() {
+      document.getElementById("content-right").innerHTML = formulario;
+      document.getElementById("boton_add_item").addEventListener('click', function () {
+        var name = document.getElementById("PointName").value;
+        var coordx = document.getElementById("PointX").value;
+        var coordy = document.getElementById("PointY").value;
+        var coordz = document.getElementById("PointZ").value;
+        var type = document.getElementById("Tipo").value;
+        var token = localStorage.getItem("token");
+        servicio_API.crearPunto(name, coordx, coordy, coordz, type, token).then(function () {
+          return obtenerPuntos(0);
+        });
+      });
+      document.getElementById("boton_update_item").addEventListener('click', function () {
+        var id = document.getElementById("PointID").value;
+        var name = document.getElementById("PointName").value;
+        var coordx = document.getElementById("PointX").value;
+        var coordy = document.getElementById("PointY").value;
+        var coordz = document.getElementById("PointZ").value;
+        var type = document.getElementById("Tipo").value;
+        var token = localStorage.getItem("token");
+        servicio_API.actualizaPunto(id, name, coordx, coordy, coordz, type, token).then(function () {
+          return obtenerPuntos(0);
+        });
+      });
+    }
+  }, {
+    key: "borrarPunto",
+    value: function borrarPunto(id) {
+      servicio_API.borrarPunto(id).then(function () {
+        return obtenerPuntos(0);
+      });
+    }
+  }]);
+
+  return LN_puntos;
+}();
+
+exports.default = LN_puntos;
+;
+},{"./servicios/API_puntos":"js/servicios/API_puntos.js","handlebars":"node_modules/handlebars/lib/index.js"}],"js/LN_tipos.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _API_puntos = require("./servicios/API_puntos");
+
+var _handlebars = require("handlebars");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var url = 'http://localhost:3000';
+var servicio_API = new _API_puntos.Servicio_API(url);
+var templateListaTipos = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de tipos de punto</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n          <td scope=\"col\">{{id}}</td>\n          <td scope=\"col\">{{type_name}}</td>\n          <td scope=\"col\"><a id=\"enlace_tipo_{{id}}\" href=\"javascript:verDetallesTipo({{id}})\"><i class=\"fa fa-eye fa-2x\" style=\"color:green\"></i></a></td>\n          <td scope=\"col\"><a id=\"enlace_tipo_delete_{{id}}\" href=\"javascript:borrarTipo({{id}})\"><i class=\"fa fa-trash fa-2x\" style=\"color:red\"></i></a></td>\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerTipos(-1)\"><i class=\"fas fa-step-backward fa-2x\" style=\"color:white\"></i></a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerTipos(1)\"><i class=\"fas fa-step-forward fa-2x\" style=\"color:white\"></i></a></td>\n      </tr>\n    </tfooter>\n   </table>\n";
+var tmpl_listatipos_compilada = (0, _handlebars.compile)(templateListaTipos);
+var ActualPageTipos = 0;
+
+var LN_tipos =
+/*#__PURE__*/
+function () {
+  function LN_tipos() {
+    _classCallCheck(this, LN_tipos);
+
+    this.tmpl_listatipos_compilada = tmpl_listatipos_compilada;
+  }
+
+  _createClass(LN_tipos, [{
+    key: "obtenerTipos",
+    value: function obtenerTipos(page) {
+      ActualPageTipos += page;
+      if (ActualPageTipos < 0) ActualPageTipos = 0;
+      servicio_API.obtenerTipos(ActualPageTipos).then(function (datos) {
+        var listaHTML = tmpl_listatipos_compilada(datos);
+        document.getElementById("content-center").innerHTML = listaHTML;
+      });
+    }
+  }, {
+    key: "verDetallesTipo",
+    value: function verDetallesTipo(id) {
+      servicio_API.getTipo(id).then(function (datos) {
+        alert(datos.desc);
+      });
+    }
+  }, {
+    key: "borrarTipo",
+    value: function borrarTipo(id) {
+      servicio_API.borrarTipo(id).then(function (datos) {
+        obtenerTipos(0);
+        obtenerPuntos(0);
+        loadMap();
+      });
+    }
+  }]);
+
+  return LN_tipos;
+}();
+
+exports.default = LN_tipos;
+},{"./servicios/API_puntos":"js/servicios/API_puntos.js","handlebars":"node_modules/handlebars/lib/index.js"}],"js/Mapa.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _API_puntos = require("./servicios/API_puntos");
+
+var _handlebars = require("handlebars");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var url = 'http://localhost:3000';
+var servicio_API = new _API_puntos.Servicio_API(url);
+var templatePlacemark = "\n<Placemark>\n  <name>{{name}}</name>\n  <description>El tipo de punto es:{{type}} y su nombre {{name}}</description>\n  <styleUrl>#{{icon}}</styleUrl>\n  <Point>\n    <coordinates>{{coordX}},{{coordY}},{{coordZ}}</coordinates>\n  </Point>\n</Placemark>";
+var templateKML = "\n<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n  <Document><name>Mapa</name>\n  <Style id=\"ic_accessible_elevator\"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_elevator.png</href><scale>0.2</scale></Icon></IconStyle></Style>';\n  <Style id=\"ic_accessible_park\"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_park.png</href><scale>0.2</scale></Icon></IconStyle></Style>';\n  <Style id=\"ic_accessible_wc\"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_wc.png</href><scale>0.2</scale></Icon></IconStyle></Style>';\n  {{#.}}\n    ".concat(templatePlacemark, "\n  {{/.}}\n  </Document></kml>\n");
+var tmpl_kml_compilada = (0, _handlebars.compile)(templateKML);
+
+var Mapa =
+/*#__PURE__*/
+function () {
+  function Mapa() {
+    _classCallCheck(this, Mapa);
+  }
+
+  _createClass(Mapa, [{
+    key: "loadMap",
+    value: function loadMap() {
+      servicio_API.obtenerKML().then(function (datos) {
+        var listaHTML = tmpl_kml_compilada(datos);
+        document.getElementById('map').innerHTML = "";
+        var map = new ol.Map({
+          target: 'map',
+          layers: [new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })],
+          view: new ol.View({
+            center: ol.proj.fromLonLat([-0.5133, 38.38504]),
+            zoom: 16,
+            minZoom: 2,
+            maxZoom: 20
+          })
+        });
+        map.addControl(new ol.control.FullScreen());
+        map.addControl(new ol.control.OverviewMap());
+        var features = new ol.format.KML({
+          showPointNames: false,
+          extractAttributes: true
+        }).readFeatures(listaHTML, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:3857'
+        });
+        var kmlvectorSource = new ol.source.Vector({
+          features: features
+        });
+        var kmlvector = new ol.layer.Vector({
+          source: kmlvectorSource
+        });
+        map.addLayer(kmlvector);
+        map.on('click', function (evt) {
+          var pixel = evt.pixel;
+          var features = [];
+          map.forEachFeatureAtPixel(pixel, function (feature) {
+            features.push(feature);
+          });
+
+          if (features.length > 0) {
+            var coordinate = features[0].getGeometry().getFirstCoordinate();
+
+            if (features[0].get("features") && features[0].get("features").length > 1) {
+              map.getView().setZoom(map.getView().getZoom() + 1);
+            } else {
+              alert(features[0].get("description"));
+            }
+          }
+        });
+      });
+    }
+  }]);
+
+  return Mapa;
+}();
+
+exports.default = Mapa;
+},{"./servicios/API_puntos":"js/servicios/API_puntos.js","handlebars":"node_modules/handlebars/lib/index.js"}],"js/main.js":[function(require,module,exports) {
 "use strict";
 
 var _API_puntos = require("./servicios/API_puntos.js");
 
 var _API_usuarios = require("./servicios/API_usuarios.js");
 
-var _handlebars = require("handlebars");
+var _LN_puntos = _interopRequireDefault(require("./LN_puntos"));
+
+var _LN_tipos = _interopRequireDefault(require("./LN_tipos"));
+
+var _Mapa = _interopRequireDefault(require("./Mapa"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //Archivo "main.js"
-//import {saludar} from './saludador.js'
-//import {obtenerPuntos,verDetalles,verListaPuntos,loadFormPuntos,borrarPunto,crearPunto} from './LN_puntos.js'
-var ActualPage = 0;
-var ActualPageTipos = 0;
-var templateLista = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de la puntos</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n        <td scope=\"col\">{{id}}</td>\n        <td scope=\"col\">{{name}}</td>\n        <td scope=\"col\"><a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\"><i class=\"fa fa-eye fa-2x\" style=\"color:green\"></i></a></td>\n        <td scope=\"col\"><a id=\"enlace_delete_{{id}}\" href=\"javascript:borrarPunto({{id}})\"><i class=\"fa fa-trash fa-2x\" style=\"color:red\"></i></a></td>\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(-1)\"><i class=\"fas fa-step-backward fa-2x\" style=\"color:white\"></i></a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(1)\"><i class=\"fas fa-step-forward fa-2x\" style=\"color:white\"></i></a></td>\n      </tr>\n    </tfooter>\n   </table>\n";
-var templateListaTipos = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de tipos de punto</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n          <td scope=\"col\">{{id}}</td>\n          <td scope=\"col\">{{type_name}}</td>\n          <td scope=\"col\"><a id=\"enlace_tipo_{{id}}\" href=\"javascript:verDetallesTipo({{id}})\"><i class=\"fa fa-eye fa-2x\" style=\"color:green\"></i></a></td>\n          <td scope=\"col\"><a id=\"enlace_tipo_delete_{{id}}\" href=\"javascript:borrarTipo({{id}})\"><i class=\"fa fa-trash fa-2x\" style=\"color:red\"></i></a></td>\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerTipos(-1)\"><i class=\"fas fa-step-backward fa-2x\" style=\"color:white\"></i></a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerTipos(1)\"><i class=\"fas fa-step-forward fa-2x\" style=\"color:white\"></i></a></td>\n      </tr>\n    </tfooter>\n   </table>\n";
-var templatePlacemark = "\n<Placemark>\n  <name>{{name}}</name>\n  <description>El tipo de punto es:{{type}}</description>\n  <styleUrl>#{{icon}}</styleUrl>\n  <Point>\n    <coordinates>{{coordX}},{{coordY}},{{coordZ}}</coordinates>\n  </Point>\n</Placemark>";
-var templateKML = "\n<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n  <Document><name>Mapa</name>\n  <Style id=\"ic_accessible_elevator\"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_elevator.png</href><scale>0.2</scale></Icon></IconStyle></Style>';\n  <Style id=\"ic_accessible_park\"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_park.png</href><scale>0.2</scale></Icon></IconStyle></Style>';\n  <Style id=\"ic_accessible_wc\"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_wc.png</href><scale>0.2</scale></Icon></IconStyle></Style>';\n  {{#.}}\n    ".concat(templatePlacemark, "\n  {{/.}}\n  </Document></kml>\n");
-var formulario = "\n  <form>\n  <div class=\"row bg-info\"  style=\"height:97%\">\n    <div class=\"form-group col-md-2\">\n      <label for=\"PointID\">ID:</label>\n      <input class=\"form-control\" id=\"PointID\" name=\"PointID\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-10\">\n        <label for=\"PointName\">Nombre del punto</label>\n        <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointX\">CoordenadaX</label>\n        <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointY\">CoordenadaY</label>\n        <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointZ\">CoordenadaZ</label>\n        <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"Tipo\">Tipo de punto</label>\n        <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-8\">\n        <label for=\"TipoName\">Nombre del tipo:</label>\n        <input  class=\"form-control\" id=\"TipoName\" name=\"TipoName\" type=\"text\">\n    </div>\n    <!--<div class=\"form-group col-md-12\">\n        <label for=\"aux\">Nombre del tipo:</label>\n        <select id=\"selectTipos\"></select>\n        <input  class=\"form-control\" id=\"aux\" name=\"aux\" type=\"text\">\n    </div>-->\n    <input class=\"col-md-6 btn-success\" type=\"button\" value=\"Crear\" id=\"boton_add_item\">\n    <input class=\"col-md-6 btn-warning\" type=\"button\" value=\"Actualizar\" id=\"boton_update_item\">\n    </div>\n  </form>\n\n";
+var Punto = new _LN_puntos.default();
+var Tipo = new _LN_tipos.default();
+var Mapa1 = new _Mapa.default();
+window.verDetalles = Punto.verDetalles;
+window.obtenerPuntos = Punto.obtenerPuntos;
+window.loadFormPuntos = Punto.loadFormPuntos;
+window.borrarPunto = Punto.borrarPunto;
+window.obtenerTipos = Tipo.obtenerTipos;
+window.verDetallesTipo = Tipo.verDetallesTipo;
+window.borrarTipo = Tipo.borrarTipo;
+window.loadMap = Mapa1.loadMap;
 var login = "\n<form>\n    <div class=\"form-group\">\n        <label for=\"username\">Usuario</label>\n        <input class=\"form-control\" id=\"username\" name=\"username\" type=\"text\">\n    </div>\n    <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input class=\"form-control\" id=\"password\" name=\"password\" type=\"text\">\n    </div>\n    <button type=\"button\" id=\"loginButton\">Log in</button>\n    <button type=\"button\" id=\"registrarButton\">Registro</button>\n</form>\n";
-var tmpl_lista_compilada = (0, _handlebars.compile)(templateLista);
-var tmpl_listatipos_compilada = (0, _handlebars.compile)(templateListaTipos);
-var tmpl_kml_compilada = (0, _handlebars.compile)(templateKML);
 var url = 'http://localhost:3000';
-var servicio_API = new _API_puntos.Servicio_API(url);
 var servicio_Usuario = new _API_usuarios.S_Usuario(url);
 document.addEventListener('DOMContentLoaded', function () {
   //document.getElementById('mensaje').innerHTML = saludar();
-  loadMap();
+  Mapa1.loadMap();
 
   if (typeof Storage !== "undefined") {
     var token = localStorage.getItem("token");
 
     if (token !== null) {
-      obtenerPuntos(-1);
-      obtenerTipos(0);
-      loadFormPuntos();
+      Punto.obtenerPuntos(-1);
+      Tipo.obtenerTipos(0);
+      Punto.loadFormPuntos();
       var nombre = localStorage.getItem("nombre");
       document.getElementById("loginForm").innerHTML = "Usuario<button type=\"button\" id=\"logoutButton\" class=\"bg-danger\"><i class=\"fas fa-sign-out-alt\"></i>Exit</button>";
       document.getElementById("logoutButton").addEventListener('click', function () {
@@ -10095,153 +10354,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("content-left").innerHTML = "Lo siento, el navegador no soporta localstorage, por lo que algunas funciones no estaran disponibles";
   }
 });
-
-function obtenerPuntos(page) {
-  ActualPage += page;
-  if (ActualPage < 0) ActualPage = 0;
-  servicio_API.obtenerPuntos(ActualPage).then(function (datos) {
-    var listaHTML = tmpl_lista_compilada(datos);
-    document.getElementById("content-left").innerHTML = listaHTML;
-  });
-}
-
-window.obtenerPuntos = obtenerPuntos;
-
-function obtenerTipos(page) {
-  ActualPageTipos += page;
-  if (ActualPageTipos < 0) ActualPageTipos = 0;
-  servicio_API.obtenerTipos(ActualPageTipos).then(function (datos) {
-    var listaHTML = tmpl_listatipos_compilada(datos);
-    document.getElementById("content-center").innerHTML = listaHTML;
-  });
-}
-
-window.obtenerTipos = obtenerTipos;
-
-function verDetalles(id) {
-  servicio_API.getPunto(id).then(function (datos) {
-    document.getElementById("PointID").value = datos.id;
-    document.getElementById("PointName").value = datos.name;
-    document.getElementById("PointX").value = datos.coordX;
-    document.getElementById("PointY").value = datos.coordY;
-    document.getElementById("PointZ").value = datos.coordZ;
-    document.getElementById("Tipo").value = datos.type;
-    document.getElementById("TipoName").value = datos.type_name;
-  });
-}
-
-window.verDetalles = verDetalles;
-
-function loadFormPuntos() {
-  document.getElementById("content-right").innerHTML = formulario;
-  document.getElementById("boton_add_item").addEventListener('click', function () {
-    var name = document.getElementById("PointName").value;
-    var coordx = document.getElementById("PointX").value;
-    var coordy = document.getElementById("PointY").value;
-    var coordz = document.getElementById("PointZ").value;
-    var type = document.getElementById("Tipo").value;
-    var token = localStorage.getItem("token");
-    servicio_API.crearPunto(name, coordx, coordy, coordz, type, token).then(function (resp) {
-      obtenerPuntos(0);
-    });
-  });
-  document.getElementById("boton_update_item").addEventListener('click', function () {
-    var id = document.getElementById("PointID").value;
-    var name = document.getElementById("PointName").value;
-    var coordx = document.getElementById("PointX").value;
-    var coordy = document.getElementById("PointY").value;
-    var coordz = document.getElementById("PointZ").value;
-    var type = document.getElementById("Tipo").value;
-    var token = localStorage.getItem("token");
-    servicio_API.actualizaPunto(id, name, coordx, coordy, coordz, type, token).then(function (resp) {
-      obtenerPuntos(0);
-    });
-  });
-}
-
-window.loadFormPuntos = loadFormPuntos;
-
-function loadMap() {
-  servicio_API.obtenerKML().then(function (datos) {
-    //console.log(datos)
-    var listaHTML = tmpl_kml_compilada(datos);
-    document.getElementById('map').innerHTML = "";
-    console.log(listaHTML);
-    var map = new ol.Map({
-      target: 'map',
-      layers: [new ol.layer.Tile({
-        source: new ol.source.OSM()
-      })],
-      view: new ol.View({
-        center: ol.proj.fromLonLat([-0.5133, 38.38504]),
-        zoom: 16,
-        minZoom: 2,
-        maxZoom: 20
-      })
-    });
-    map.addControl(new ol.control.FullScreen());
-    map.addControl(new ol.control.OverviewMap());
-    var features = new ol.format.KML().readFeatures(listaHTML, {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:3857'
-    });
-    var kmlvectorSource = new ol.source.Vector({
-      features: features
-    });
-    var kmlvector = new ol.layer.Vector({
-      source: kmlvectorSource
-    });
-    map.addLayer(kmlvector);
-    map.on('click', function (evt) {
-      var pixel = evt.pixel;
-      var features = [];
-      map.forEachFeatureAtPixel(pixel, function (feature) {
-        features.push(feature);
-      });
-
-      if (features.length > 0) {
-        var coordinate = features[0].getGeometry().getFirstCoordinate();
-
-        if (features[0].get("features") && features[0].get("features").length > 1) {
-          map.getView().setZoom(map.getView().getZoom() + 1);
-        } else {
-          alert(features[0].get("description")); //document.getElementById("popupContent").innerHTML = '<p>' + features[0].get("description") + '</p>';
-        }
-      } else {//popupCloser.onclick();
-        }
-    });
-  });
-}
-
-window.loadMap = loadMap;
-
-function borrarPunto(id) {
-  servicio_API.borrarPunto(id).then(function (datos) {
-    obtenerPuntos(0);
-    loadMap();
-  });
-}
-
-window.borrarPunto = borrarPunto;
-
-function verDetallesTipo(id) {
-  servicio_API.getTipo(id).then(function (datos) {
-    alert(datos.desc);
-  });
-}
-
-window.verDetallesTipo = verDetallesTipo;
-
-function borrarTipo(id) {
-  servicio_API.borrarTipo(id).then(function (datos) {
-    obtenerTipos(0);
-    obtenerPuntos(0);
-    loadMap();
-  });
-}
-
-window.borrarTipo = borrarTipo;
-},{"./servicios/API_puntos.js":"js/servicios/API_puntos.js","./servicios/API_usuarios.js":"js/servicios/API_usuarios.js","handlebars":"node_modules/handlebars/lib/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./servicios/API_puntos.js":"js/servicios/API_puntos.js","./servicios/API_usuarios.js":"js/servicios/API_usuarios.js","./LN_puntos":"js/LN_puntos.js","./LN_tipos":"js/LN_tipos.js","./Mapa":"js/Mapa.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -10268,7 +10381,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52254" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61278" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

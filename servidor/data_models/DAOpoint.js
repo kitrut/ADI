@@ -46,8 +46,8 @@ DAOpoint ={
     },
     post:function(req,resp,db){
         var body= req.body
-        var stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?,?)');
-        stmt.run(null,body.name,body.coordX,body.coordY,body.coordZ,body.type,function(err,row){
+        var stmt = db.prepare('INSERT INTO point VALUES (?,?,?,?,?,?,?)');
+        stmt.run(null,body.name,body.coordX,body.coordY,body.coordZ,body.type,"",function(err,row){
             if(err) resp.status(400).send("Error");
             else{
                 resp.status(201).header('Location', 'http://localhost:3000/api/point/'+stmt.lastID).send();
