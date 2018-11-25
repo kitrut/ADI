@@ -73,6 +73,8 @@ var templateListaTipos = `
 var templatePlacemark =`
 <Placemark>
   <name>{{name}}</name>
+  <description>El tipo de punto es:{{type}}</description>
+  <styleUrl>#{{icon}}</styleUrl>
   <Point>
     <coordinates>{{coordX}},{{coordY}},{{coordZ}}</coordinates>
   </Point>
@@ -81,6 +83,9 @@ var templatePlacemark =`
 var templateKML =`
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document><name>Mapa</name>
+  <Style id="ic_accessible_elevator"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_elevator.png</href><scale>0.2</scale></Icon></IconStyle></Style>';
+  <Style id="ic_accessible_park"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_park.png</href><scale>0.2</scale></Icon></IconStyle></Style>';
+  <Style id="ic_accessible_wc"><IconStyle><Icon><href>http://localhost:3000/files/ic_accessible_wc.png</href><scale>0.2</scale></Icon></IconStyle></Style>';
   {{#.}}
     ${templatePlacemark}
   {{/.}}
@@ -268,7 +273,7 @@ function loadMap(){
     //console.log(datos)
     var listaHTML = tmpl_kml_compilada(datos)
     document.getElementById('map').innerHTML ="";
-    //console.log(listaHTML);
+    console.log(listaHTML);
     var map = new ol.Map({
       target: 'map',
       layers: [
@@ -294,6 +299,23 @@ function loadMap(){
     var kmlvectorSource = new ol.source.Vector({features:features});
     var kmlvector = new ol.layer.Vector({source:kmlvectorSource});
     map.addLayer(kmlvector);
+    map.on('click', function(evt) {
+      var pixel = evt.pixel;
+      var features = [];
+      map.forEachFeatureAtPixel(pixel, function(feature) {
+          features.push(feature);
+      });
+      if (features.length > 0) {
+          var coordinate = features[0].getGeometry().getFirstCoordinate();
+          if (features[0].get("features") && features[0].get("features").length > 1) {
+              map.getView().setZoom(map.getView().getZoom()+1);
+          } else { 
+            alert(features[0].get("description"));//document.getElementById("popupContent").innerHTML = '<p>' + features[0].get("description") + '</p>';
+          }
+      } else {
+          //popupCloser.onclick();
+      }
+  });
   })
   
 }
@@ -301,6 +323,7 @@ window.loadMap = loadMap;
 function borrarPunto(id){
   servicio_API.borrarPunto(id).then(function(datos){
     obtenerPuntos(0)
+    loadMap();
   })  
 }
 window.borrarPunto = borrarPunto;

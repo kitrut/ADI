@@ -57,6 +57,8 @@ router.delete('/api/points/:id',checkAuth,function(req,resp){DAOpoint.delete(req
 router.get('/api/points',function(req,resp){DAOpoint.all(req,resp,db)})
 router.post('/api/points',checkAuth,function(req,resp){DAOpoint.post(req,resp,db)})
 
-
+router.get('/files/:name',function(req,resp){
+    resp.sendFile(__dirname+'/public/'+req.params.name);
+})
 
 module.exports = router;
