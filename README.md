@@ -9,7 +9,7 @@ Para su ejecución:
 ```
 cd cliente/
 npm i
-node_modules/.bin/parcel index.hmtl
+node_modules/.bin/parcel index.html
 ```
 * Tras esto se lanzará en http:://localhost:1234/ en la que deberemos registrarnos y logearnos
 * Una vez conectados obtendremos una vista como esta:
