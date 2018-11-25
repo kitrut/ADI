@@ -11,12 +11,17 @@ Para su ejecución:
 cd cliente/
 npm i
 node_modules/.bin/parcel index.html
+#en otro terminal
+cd servidor/
+npm i
+node main.js
 ```
 * Tras esto se lanzará en http:://localhost:1234/ en la que deberemos registrarnos y logearnos
 * Una vez conectados obtendremos una vista como esta:
 ![captura](https://user-images.githubusercontent.com/36452194/48981795-61413400-f0da-11e8-8071-205177186688.PNG)
 
 ## Cosas a tener en cuenta:
+* Los base de datos se regenera cada vez que se lanza el servidor
 * Los tipos de punto eliminan los puntos en cascada
 * Los nuevos puntos todavía no tendrán un icono asociado hasta que sean validados
 * Ver detalles de un punto, cargará sus datos en el formulario permitiendo así su modificación o la creación de nuevos puntos basados en este
