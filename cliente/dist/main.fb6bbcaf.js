@@ -135,6 +135,13 @@ function () {
       });
     }
   }, {
+    key: "obtenerKML",
+    value: function obtenerKML() {
+      return fetch(this.API_URL + '/api/points').then(function (response) {
+        if (response.ok) return response.json();
+      });
+    }
+  }, {
     key: "getPunto",
     value: function getPunto(id) {
       return fetch(this.API_URL + '/api/points/' + id).then(function (response) {
@@ -10030,15 +10037,20 @@ var ActualPage = 0;
 var ActualPageTipos = 0;
 var templateLista = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de la puntos</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n        <td scope=\"col\">{{id}}</td>\n        <td scope=\"col\">{{name}}</td>\n        <td scope=\"col\"><a id=\"enlace_{{id}}\" href=\"javascript:verDetalles({{id}})\"><i class=\"fa fa-eye fa-2x\" style=\"color:green\"></i></a></td>\n        <td scope=\"col\"><a id=\"enlace_delete_{{id}}\" href=\"javascript:borrarPunto({{id}})\"><i class=\"fa fa-trash fa-2x\" style=\"color:red\"></i></a></td>\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(-1)\"><i class=\"fas fa-step-backward fa-2x\" style=\"color:white\"></i></a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerPuntos(1)\"><i class=\"fas fa-step-forward fa-2x\" style=\"color:white\"></i></a></td>\n      </tr>\n    </tfooter>\n   </table>\n";
 var templateListaTipos = " \n <table class=\"table table-dark table-bordered table-hover\">\n    <thead>\n      <tr>\n        <td colspan=4><h3>Lista de tipos de punto</h3></td>\n      </tr>\n      <tr>\n        <td scope=\"col\">#</td>\n        <td scope=\"col\" colspan=3>Nombre</td>\n      </tr>\n    </thead>\n    <tbody>\n        {{#.}}\n        <tr>\n          <td scope=\"col\">{{id}}</td>\n          <td scope=\"col\">{{type_name}}</td>\n          <td scope=\"col\"><a id=\"enlace_tipo_{{id}}\" href=\"javascript:verDetallesTipo({{id}})\"><i class=\"fa fa-eye fa-2x\" style=\"color:green\"></i></a></td>\n          <td scope=\"col\"><a id=\"enlace_tipo_delete_{{id}}\" href=\"javascript:borrarTipo({{id}})\"><i class=\"fa fa-trash fa-2x\" style=\"color:red\"></i></a></td>\n        </tr>\n        {{/.}}      \n    </tbody>\n    <tfooter>\n      <tr>\n        <td scope=\"col\" colspan=2></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerTipos(-1)\"><i class=\"fas fa-step-backward fa-2x\" style=\"color:white\"></i></a></td>\n        <td scope=\"col\"><a href=\"javascript:obtenerTipos(1)\"><i class=\"fas fa-step-forward fa-2x\" style=\"color:white\"></i></a></td>\n      </tr>\n    </tfooter>\n   </table>\n";
+var templatePlacemark = "\n<Placemark>\n  <name>{{name}}</name>\n  <Point>\n    <coordinates>{{coordX}},{{coordY}},{{coordZ}}</coordinates>\n  </Point>\n</Placemark>";
+var templateKML = "\n<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n  <Document><name>Mapa</name>\n  {{#.}}\n    ".concat(templatePlacemark, "\n  {{/.}}\n  </Document></kml>\n");
 var formulario = "\n  <form>\n  <div class=\"row bg-info\"  style=\"height:97%\">\n    <div class=\"form-group col-md-2\">\n      <label for=\"PointID\">ID:</label>\n      <input class=\"form-control\" id=\"PointID\" name=\"PointID\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-10\">\n        <label for=\"PointName\">Nombre del punto</label>\n        <input class=\"form-control\" id=\"PointName\" name=\"PointName\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointX\">CoordenadaX</label>\n        <input  class=\"form-control\" id=\"PointX\" name=\"PointX\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointY\">CoordenadaY</label>\n        <input  class=\"form-control\" id=\"PointY\" name=\"PointY\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"PointZ\">CoordenadaZ</label>\n        <input  class=\"form-control\" id=\"PointZ\" name=\"PointZ\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-4\">\n        <label for=\"Tipo\">Tipo de punto</label>\n        <input  class=\"form-control\" id=\"Tipo\" name=\"Tipo\" type=\"text\">\n    </div>\n    <div class=\"form-group col-md-8\">\n        <label for=\"TipoName\">Nombre del tipo:</label>\n        <input  class=\"form-control\" id=\"TipoName\" name=\"TipoName\" type=\"text\">\n    </div>\n    <!--<div class=\"form-group col-md-12\">\n        <label for=\"aux\">Nombre del tipo:</label>\n        <select id=\"selectTipos\"></select>\n        <input  class=\"form-control\" id=\"aux\" name=\"aux\" type=\"text\">\n    </div>-->\n    <input class=\"col-md-6 btn-success\" type=\"button\" value=\"Crear\" id=\"boton_add_item\">\n    <input class=\"col-md-6 btn-warning\" type=\"button\" value=\"Actualizar\" id=\"boton_update_item\">\n    </div>\n  </form>\n\n";
 var login = "\n<form>\n    <div class=\"form-group\">\n        <label for=\"username\">Usuario</label>\n        <input class=\"form-control\" id=\"username\" name=\"username\" type=\"text\">\n    </div>\n    <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input class=\"form-control\" id=\"password\" name=\"password\" type=\"text\">\n    </div>\n    <button type=\"button\" id=\"loginButton\">Log in</button>\n    <button type=\"button\" id=\"registrarButton\">Registro</button>\n</form>\n";
 var tmpl_lista_compilada = (0, _handlebars.compile)(templateLista);
 var tmpl_listatipos_compilada = (0, _handlebars.compile)(templateListaTipos);
+var tmpl_kml_compilada = (0, _handlebars.compile)(templateKML);
 var url = 'http://localhost:3000';
 var servicio_API = new _API_puntos.Servicio_API(url);
 var servicio_Usuario = new _API_usuarios.S_Usuario(url);
 document.addEventListener('DOMContentLoaded', function () {
   //document.getElementById('mensaje').innerHTML = saludar();
+  loadMap();
+
   if (typeof Storage !== "undefined") {
     var token = localStorage.getItem("token");
 
@@ -10149,6 +10161,42 @@ function loadFormPuntos() {
 
 window.loadFormPuntos = loadFormPuntos;
 
+function loadMap() {
+  servicio_API.obtenerKML().then(function (datos) {
+    //console.log(datos)
+    var listaHTML = tmpl_kml_compilada(datos);
+    document.getElementById('map').innerHTML = ""; //console.log(listaHTML);
+
+    var map = new ol.Map({
+      target: 'map',
+      layers: [new ol.layer.Tile({
+        source: new ol.source.OSM()
+      })],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([-0.5133, 38.38504]),
+        zoom: 16,
+        minZoom: 2,
+        maxZoom: 20
+      })
+    });
+    map.addControl(new ol.control.FullScreen());
+    map.addControl(new ol.control.OverviewMap());
+    var features = new ol.format.KML().readFeatures(listaHTML, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:3857'
+    });
+    var kmlvectorSource = new ol.source.Vector({
+      features: features
+    });
+    var kmlvector = new ol.layer.Vector({
+      source: kmlvectorSource
+    });
+    map.addLayer(kmlvector);
+  });
+}
+
+window.loadMap = loadMap;
+
 function borrarPunto(id) {
   servicio_API.borrarPunto(id).then(function (datos) {
     obtenerPuntos(0);
@@ -10169,6 +10217,7 @@ function borrarTipo(id) {
   servicio_API.borrarTipo(id).then(function (datos) {
     obtenerTipos(0);
     obtenerPuntos(0);
+    loadMap();
   });
 }
 
@@ -10200,7 +10249,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59586" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60389" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

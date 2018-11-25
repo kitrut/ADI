@@ -9,6 +9,13 @@ export class Servicio_API{
                     return response.json();
             })
     }
+    obtenerKML(){
+        return fetch(this.API_URL+'/api/points')
+            .then(function(response){
+                if(response.ok)
+                    return response.json();
+            })
+    }
     getPunto(id){
         return fetch(this.API_URL+'/api/points/'+id)
             .then(function(response){

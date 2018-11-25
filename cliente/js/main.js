@@ -70,6 +70,23 @@ var templateListaTipos = `
    </table>
 ` 
 
+var templatePlacemark =`
+<Placemark>
+  <name>{{name}}</name>
+  <Point>
+    <coordinates>{{coordX}},{{coordY}},{{coordZ}}</coordinates>
+  </Point>
+</Placemark>`
+
+var templateKML =`
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document><name>Mapa</name>
+  {{#.}}
+    ${templatePlacemark}
+  {{/.}}
+  </Document></kml>
+`;
+
 var formulario = `
   <form>
   <div class="row bg-info"  style="height:97%">
@@ -126,8 +143,11 @@ var login = `
     <button type="button" id="registrarButton">Registro</button>
 </form>
 `
+
+
 var tmpl_lista_compilada = compile(templateLista)
 var tmpl_listatipos_compilada = compile(templateListaTipos)
+var tmpl_kml_compilada = compile(templateKML);
 
 var url = 'http://localhost:3000';
 var servicio_API = new Servicio_API(url)
@@ -135,10 +155,11 @@ var servicio_Usuario = new S_Usuario(url)
 
 document.addEventListener('DOMContentLoaded', function() {
     //document.getElementById('mensaje').innerHTML = saludar();
+    loadMap();
     if(typeof(Storage) !== "undefined"){
       var token = localStorage.getItem("token");
       if(token !== null){
-        obtenerPuntos(-1);
+        obtenerPuntos(-1);        
         obtenerTipos(0);
         loadFormPuntos();
         var nombre = localStorage.getItem("nombre");
@@ -242,6 +263,41 @@ function loadFormPuntos(){
 }
 window.loadFormPuntos = loadFormPuntos;
 
+function loadMap(){
+  servicio_API.obtenerKML().then(function(datos){
+    //console.log(datos)
+    var listaHTML = tmpl_kml_compilada(datos)
+    document.getElementById('map').innerHTML ="";
+    //console.log(listaHTML);
+    var map = new ol.Map({
+      target: 'map',
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([-0.5133,38.38504]),
+        zoom:16 ,
+        minZoom: 2,
+        maxZoom: 20
+      })
+    });
+    map.addControl(new ol.control.FullScreen());
+    map.addControl(new ol.control.OverviewMap());
+
+    var features = new ol.format.KML().readFeatures(listaHTML,{
+      dataProjection:'EPSG:4326',
+      featureProjection:'EPSG:3857'
+    });
+    
+    var kmlvectorSource = new ol.source.Vector({features:features});
+    var kmlvector = new ol.layer.Vector({source:kmlvectorSource});
+    map.addLayer(kmlvector);
+  })
+  
+}
+window.loadMap = loadMap;
 function borrarPunto(id){
   servicio_API.borrarPunto(id).then(function(datos){
     obtenerPuntos(0)
@@ -260,6 +316,7 @@ function borrarTipo(id){
   servicio_API.borrarTipo(id).then(function(datos){
     obtenerTipos(0);
     obtenerPuntos(0);
+    loadMap();
   })
 }
 window.borrarTipo = borrarTipo;
