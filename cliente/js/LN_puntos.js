@@ -78,16 +78,30 @@ var templateLista = `
 var tmpl_lista_compilada = compile(templateLista)
 var ActualPage = 0;
 "use strict";
+/**
+ * Clase encargada de la logia de los puntos
+ */
 export default class LN_puntos {
+    /**
+     * Constructor
+     */
     constructor(){
         this.formulario = formulario;
         this.tmpl_lista_compilada = tmpl_lista_compilada;
     }
+    /**
+     * Obtiene una lista de los puntos del servicio y los pinta en el html
+     * @param {*} page pagina que deseamos mostrar
+     */
     obtenerPuntos(page){
         ActualPage+= page;
         if(ActualPage<0) ActualPage=0;
         servicio_API.obtenerPuntos(ActualPage).then((datos) => document.getElementById("content-left").innerHTML = tmpl_lista_compilada(datos))
     } 
+    /**
+     * Ver los detalles carga los datos en el formulario
+     * @param {*} id id del punto que deseamos ver
+     */
     verDetalles(id){
         servicio_API.getPunto(id).then(function(datos){
           document.getElementById("PointID").value = datos.id;
@@ -99,6 +113,9 @@ export default class LN_puntos {
           document.getElementById("TipoName").value = datos.type_name;
         })
     }
+    /**
+     * Carga el formulario y habilita sus botones para crear y actualizar puntos
+     */
     loadFormPuntos(){
         document.getElementById("content-right").innerHTML = formulario;
         document.getElementById("boton_add_item").addEventListener('click',function(){
@@ -122,6 +139,10 @@ export default class LN_puntos {
           
         })
     }
+    /**
+     * Borra un punto
+     * @param {*} id ID a borrar
+     */
     borrarPunto(id){
         servicio_API.borrarPunto(id).then(() => obtenerPuntos(0))  
     }

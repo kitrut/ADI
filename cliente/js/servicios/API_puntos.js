@@ -1,7 +1,15 @@
+/**
+ * Clase encargada de la comunicación con el servidor para los CRUD de point y type
+ */
 export class Servicio_API{
+    /** Constructor */
     constructor(url){
         this.API_URL = url;
     }
+    /**
+     * Obtiene los puntos de la base de datos paginados de 5 en 5
+     * @param {*} page Pagina a la que deseas ir
+     */
     obtenerPuntos(page){
         return fetch(this.API_URL+'/api/points?limit=5&offset='+page)
             .then(function(response){
@@ -9,6 +17,9 @@ export class Servicio_API{
                     return response.json();
             })
     }
+    /**
+     * Obtiene todos los puntos de la base de datos para dibujarlos en el mapa usando el formato kml
+     */
     obtenerKML(){
         return fetch(this.API_URL+'/api/points')
             .then(function(response){
@@ -16,6 +27,10 @@ export class Servicio_API{
                     return response.json();
             })
     }
+    /**
+     * Obtiene la información de un único punto
+     * @param {*} id ID del punto a buscar
+     */
     getPunto(id){
         return fetch(this.API_URL+'/api/points/'+id)
             .then(function(response){
@@ -23,6 +38,10 @@ export class Servicio_API{
                     return response.json();
             })
     }
+    /**
+     * Obtiene un subconjunto de tipos de la base de datos paginados de 5 en 5
+     * @param {*} page Número de página que deseas ver
+     */
     obtenerTipos(page){
         return fetch(this.API_URL+'/api/types?limit=5&offset='+page)//?limit='+limit+'&offset='+page)
             .then(function(response){
@@ -30,6 +49,10 @@ export class Servicio_API{
                     return response.json();
             })
     }
+    /**
+     * Obtiene los detalles de un tipo en concreto
+     * @param {*} id ID del tipo buscado
+     */
     getTipo(id){
         return fetch(this.API_URL+'/api/types/'+id)
             .then(function(response){
@@ -37,6 +60,10 @@ export class Servicio_API{
                     return response.json();
             })
     }
+    /**
+     * Borra un punto de la base de datos
+     * @param {*} id ID que deseamos borrar
+     */
     borrarPunto(id){
         return fetch(this.API_URL+'/api/points/'+id, {
             method: 'DELETE',
@@ -48,6 +75,10 @@ export class Servicio_API{
             return respuesta.status
         })
     }
+    /**
+     * Borra un tipo de la base de datos
+     * @param {*} id Id que deseamos borrar
+     */
     borrarTipo(id){
         return fetch(this.API_URL+'/api/types/'+id, {
             method: 'DELETE',
@@ -59,6 +90,15 @@ export class Servicio_API{
             return respuesta.status
         })
     }
+    /**
+     * Crea un nuevo punto en la base de datos
+     * @param {*} name nombre del punto
+     * @param {*} coordx  coordenada X
+     * @param {*} coordy  coordenada Y
+     * @param {*} coordz  coordenada Z
+     * @param {*} type  ID del tipo de punto
+     * @param {*} token token del usuario registrado
+     */
     crearPunto(name,coordx,coordy,coordz,type,token){
         return fetch(this.API_URL+'/api/points', {
             method: 'POST',
@@ -70,6 +110,15 @@ export class Servicio_API{
             return respuesta.status
         })
     }
+    /**
+     * Actualiza un nuevo punto en la base de datos
+     * @param {*} name nombre del punto
+     * @param {*} coordx  coordenada X
+     * @param {*} coordy  coordenada Y
+     * @param {*} coordz  coordenada Z
+     * @param {*} type  ID del tipo de punto
+     * @param {*} token token del usuario registrado
+     */
     actualizaPunto(id,name,coordx,coordy,coordz,type,token){
         return fetch(this.API_URL+'/api/points/'+id, {
             method: 'PUT',
@@ -79,28 +128,6 @@ export class Servicio_API{
             body: JSON.stringify({"name":name,"coordX":coordx,"coordY":coordy,"coordZ":coordz,"type":type,"token":token})
         }).then(function (respuesta) {
             return respuesta.status
-        })
-    }
-    login(usuario,password){
-        return fetch(this.API_URL+'/login', {
-            method: 'POST',
-            headers: {
-                'Content-type':'application/json'
-            },
-            body: JSON.stringify({"usuario":usuario,"password":password})
-        }).then(function (respuesta) {
-            return respuesta
-        })
-    }
-    registro(usuario,password){
-        return fetch(this.API_URL+'/registro', {
-            method: 'POST',
-            headers: {
-                'Content-type':'application/json'
-            },
-            body: JSON.stringify({"usuario":usuario,"password":password})
-        }).then(function (respuesta) {
-            return respuesta
         })
     }
 }

@@ -24,59 +24,64 @@ var templateKML =`
   </Document></kml>
 `
 var tmpl_kml_compilada = compile(templateKML);
-
+/**
+ * Clase que lleva la logica necesaria para generar el mapa
+ */
 export default class Mapa{
-    constructor(){
-
-    }
-    loadMap(){
-        servicio_API.obtenerKML().then(function(datos){
-          var listaHTML = tmpl_kml_compilada(datos)
-          document.getElementById('map').innerHTML ="";
-          var map = new ol.Map({
-            target: 'map',
-            layers: [
-              new ol.layer.Tile({
-                source: new ol.source.OSM()
-              })
-            ],
-            view: new ol.View({
-              center: ol.proj.fromLonLat([-0.5133,38.38504]),
-              zoom:16 ,
-              minZoom: 2,
-              maxZoom: 20
-            })
-          });
-          map.addControl(new ol.control.FullScreen());
-          map.addControl(new ol.control.OverviewMap());
-      
-          var features = new ol.format.KML({
-            showPointNames: false,
-            extractAttributes: true
-        }).readFeatures(listaHTML,{
-            dataProjection:'EPSG:4326',
-            featureProjection:'EPSG:3857'
-          });
-          
-          var kmlvectorSource = new ol.source.Vector({features:features});
-          var kmlvector = new ol.layer.Vector({source:kmlvectorSource});
-          map.addLayer(kmlvector);
-          map.on('click', function(evt) {
-            var pixel = evt.pixel;
-            var features = [];
-            map.forEachFeatureAtPixel(pixel, function(feature) {
-                features.push(feature);
-            });
-            if (features.length > 0) {
-                var coordinate = features[0].getGeometry().getFirstCoordinate();
-                if (features[0].get("features") && features[0].get("features").length > 1) {
-                    map.getView().setZoom(map.getView().getZoom()+1);
-                } else { 
-                  alert(features[0].get("description"));
-                }
-            }
-        });
+  /**
+   * constructor
+   */  
+  constructor(){}
+  /**
+   * Obtiene los datos del servidor y los carga en el mapa
+   */
+  loadMap(){
+    servicio_API.obtenerKML().then(function(datos){
+      var listaHTML = tmpl_kml_compilada(datos)
+      document.getElementById('map').innerHTML ="";
+      var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([-0.5133,38.38504]),
+          zoom:16 ,
+          minZoom: 2,
+          maxZoom: 20
         })
+      });
+      map.addControl(new ol.control.FullScreen());
+      map.addControl(new ol.control.OverviewMap());
+    
+      var features = new ol.format.KML({
+        showPointNames: false,
+        extractAttributes: true
+      }).readFeatures(listaHTML,{
+        dataProjection:'EPSG:4326',
+        featureProjection:'EPSG:3857'
+      });
         
-      }
+      var kmlvectorSource = new ol.source.Vector({features:features});
+      var kmlvector = new ol.layer.Vector({source:kmlvectorSource});
+      map.addLayer(kmlvector);
+      map.on('click', function(evt) {
+        var pixel = evt.pixel;
+        var features = [];
+        map.forEachFeatureAtPixel(pixel, function(feature) {
+          features.push(feature);
+        });
+        if (features.length > 0) {
+          var coordinate = features[0].getGeometry().getFirstCoordinate();
+          if (features[0].get("features") && features[0].get("features").length > 1) {
+              map.getView().setZoom(map.getView().getZoom()+1);
+          } else { 
+            alert(features[0].get("description"));
+          }
+        }
+      });
+    })      
+  }
 }

@@ -35,10 +35,20 @@ var templateListaTipos = `
 ` 
 var tmpl_listatipos_compilada = compile(templateListaTipos)
 var ActualPageTipos = 0;
+/**
+ * Clase que contiene la lógica de los tipos
+ */
 export default class LN_tipos{
+    /**
+    * Constructor
+    */
     constructor(){
         this.tmpl_listatipos_compilada = tmpl_listatipos_compilada;
     }
+    /**
+     * Obtiene los tipos del servicio y los dibuja en el html
+     * @param {*} page pagina que desamos cargar
+     */
     obtenerTipos(page){
         ActualPageTipos += page;
         if(ActualPageTipos<0) ActualPageTipos=0;
@@ -47,11 +57,19 @@ export default class LN_tipos{
           document.getElementById("content-center").innerHTML = listaHTML; 
         })
     }
+    /**
+     * Lana un popup con los datos del tipo al pinchar en ver detalles
+     * @param {*} id id que deseamos ver
+     */
     verDetallesTipo(id){
         servicio_API.getTipo(id).then(function(datos){
           alert(datos.desc)
         })
     }
+    /**
+     * borra un tipo de la lista, junto con todos los puntos asociados y repinta el mapa para que no aparezcan
+     * @param {*} id ID del punto a borrar
+     */
     borrarTipo(id){
         servicio_API.borrarTipo(id).then(function(datos){
             obtenerTipos(0);
