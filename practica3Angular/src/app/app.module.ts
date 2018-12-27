@@ -14,7 +14,8 @@ import { UserComponent } from './user/user.component';
 import { DataService } from './data.service';
 import { TablePointsComponent } from './table-points/table-points.component';
 import { TableTiposComponent } from './table-tipos/table-tipos.component';
-import { PointFormComponent } from './point-form/point-form.component'
+import { PointFormComponent } from './point-form/point-form.component';
+import { MapaComponent } from './mapa/mapa.component'
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { PointFormComponent } from './point-form/point-form.component'
     UserComponent,
     TablePointsComponent,
     TableTiposComponent,
-    PointFormComponent
+    PointFormComponent,
+    MapaComponent
   ],
   imports: [
     BrowserModule,
