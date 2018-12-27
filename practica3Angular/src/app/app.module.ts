@@ -6,7 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
-import { HolaMundoComponent } from './hola-mundo/hola-mundo.component';
 import { UserComponent } from './user/user.component';
 
 
@@ -20,7 +19,6 @@ import { MapaComponent } from './mapa/mapa.component'
 @NgModule({
   declarations: [
     AppComponent,
-    HolaMundoComponent,
     UserComponent,
     TablePointsComponent,
     TableTiposComponent,

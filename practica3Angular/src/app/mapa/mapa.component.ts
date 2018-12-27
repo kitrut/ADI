@@ -4,6 +4,7 @@ import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
 import OlTileLayer from 'ol/layer/Tile';
 import OlView from 'ol/View';
+import {defaults as defaultControls, FullScreen, OverviewMap} from 'ol/control.js';
 
 import { fromLonLat } from 'ol/proj';
 
@@ -38,10 +39,17 @@ export class MapaComponent implements OnInit {
     });
 
     this.map = new OlMap({
+      controls: defaultControls().extend([
+        new FullScreen(),
+        new OverviewMap()
+      ]),
       target: 'map',
       layers: [this.layer],
       view: this.view
     });
+
+    //this.map.addControl(new ol.control.FullScreen());
+    //this.map.addControl(new ol.control.OverviewMap());
   }
 
 }
