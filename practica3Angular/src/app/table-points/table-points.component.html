@@ -1,0 +1,26 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-hover table-sm">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">X</th>
+        <th scope="col">Y</th>
+        <th scope="col">Z</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Icono</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let punto of puntos">
+        <th scope="row">{{punto.id}}</th>
+        <td>{{punto.name}}</td>
+        <td>{{punto.coordX}}</td>
+        <td>{{punto.coordY}}</td>
+        <td>{{punto.coordZ}}</td>
+        <td>{{punto.type}}</td>
+        <td>{{punto.icon}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
