@@ -1,26 +1,60 @@
-<div class="table-responsive">
-  <table class="table table-bordered table-hover table-sm">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">X</th>
-        <th scope="col">Y</th>
-        <th scope="col">Z</th>
-        <th scope="col">Tipo</th>
-        <th scope="col">Icono</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let punto of puntos">
-        <th scope="row">{{punto.id}}</th>
-        <td>{{punto.name}}</td>
-        <td>{{punto.coordX}}</td>
-        <td>{{punto.coordY}}</td>
-        <td>{{punto.coordZ}}</td>
-        <td>{{punto.type}}</td>
-        <td>{{punto.icon}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<table class="table table-bordered table-hover table-sm">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let punto of puntos">
+      <th scope="row">{{punto.id}}</th>
+      <td>{{punto.name}}</td>
+      <td>{{punto.type}}</td>
+      <td>
+        <a title="Detalles" (click)="open(content,punto)"><i class="fa fa-eye" style="color:green"></i></a>
+        <a title="Borrar"><i class="fa fa-trash" style="color:red"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Detalles del punto</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <b>Los datos solo se actualizarán si pulsas el botón save!</b>
+    <form>
+      <div class="form-group">
+          <label>Id: {{puntoModal.id}}</label>
+      </div>
+      <div class="form-group">
+          <label for="nombreInput">Nombre</label>
+          <input type="text" name="nombreInput" class="form-control" [(ngModel)]="puntoModal.name">
+      </div>
+      <div class="form-group">
+          <label for="coordxInput">Coordenada X</label>
+          <input type="text" name="coordxInput" class="form-control" [(ngModel)]="puntoModal.coordX">
+          <label for="coordyInput">Coordenada Y</label>
+          <input type="text" name="coordyInput" class="form-control" [(ngModel)]="puntoModal.coordY">
+          <label for="coordzInput">Coordenada Z</label>
+          <input type="text" name="coordzInput" class="form-control" [(ngModel)]="puntoModal.coordZ">
+      </div>
+      <div class="form-group">
+          <label for="tipoInput">Tipo</label>
+          <input type="text" name="tipoInput" class="form-control" [(ngModel)]="puntoModal.type">
+          <label for="iconInput">Icono</label>
+          <input type="text" name="iconInput" class="form-control" [(ngModel)]="puntoModal.icon">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>
+
