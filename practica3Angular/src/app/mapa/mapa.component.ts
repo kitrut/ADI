@@ -47,9 +47,6 @@ export class MapaComponent implements OnInit {
       layers: [this.layer],
       view: this.view
     });
-
-    //this.map.addControl(new ol.control.FullScreen());
-    //this.map.addControl(new ol.control.OverviewMap());
   }
 
 }

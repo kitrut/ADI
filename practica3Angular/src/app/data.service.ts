@@ -25,4 +25,10 @@ export class DataService {
   getTypes(){
     return this.http.get<Type[]>(this.url+"/api/types");
   }
+  login(user,pass){
+    return this.http.post(this.url+"/login",{"usuario":user,"password":pass});
+  }
+  registro(user,pass){
+    return this.http.post(this.url+"/registro",{"usuario":user,"password":pass});
+  }
 }
