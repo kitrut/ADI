@@ -11,8 +11,8 @@
       <th scope="row">{{type.id}}</th>
       <td>{{type.type_name}}</td>
       <td>
-        <a title="Detalles"><i class="fa fa-eye" style="color:green"></i></a>
-        <a title="Borrar"><i class="fa fa-trash" style="color:red"></i></a>
+        <a title="Detalles" (click)="detallesTipo(type)"><i class="fa fa-eye" style="color:green"></i></a>
+        <a title="Borrar" (click)="deleteTipo(type)"><i class="fa fa-trash" style="color:red"></i></a>
       </td>
     </tr>
   </tbody>

@@ -13,6 +13,7 @@ export class TablePointsComponent implements OnInit {
   puntos = [];
   closeResult: string;
   puntoModal={"id":"null","name":"null","coordX":"null","coordY":"null","coordZ":"null","type":"null","icon":"null"};
+  
   constructor(private dataService:DataService,private modalService: NgbModal){
     this.dataService.getPoints().subscribe(data => {
       console.log(data);
@@ -22,23 +23,49 @@ export class TablePointsComponent implements OnInit {
 
   ngOnInit() {
   }
+  /**
+   * Elimina un punto sobre la base de datos, lanza un alert si no se borra en el servidor
+   * @param punto punto a eliminar
+   */
+  delete(punto){
+    this.dataService.deletePoint(punto.id).subscribe(
+      data => {
+        this.puntos = this.puntos.filter((i) => i !== punto);
+      },
+      error => {
+        alert("Error"+error.toString())
+      }  
+    )  
+  }
+  /**
+   * Carga el modal con la información del punto que deseemos ver y editar; solo actualiza los datos si pulsamos el boton
+   * @param content enlace al modal
+   * @param punto punto del que queremos obtener los detalles
+   */
   open(content,punto) {
     this.copyPoint(punto,this.puntoModal);
 
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      //TODO mandar a base de datos y di da OK, actualizamos los datos
-      this.copyPoint(this.puntoModal,punto);
-      console.log("Guardado!");
+      this.dataService.updatePoint(this.puntoModal).subscribe(
+        data => {
+          this.copyPoint(this.puntoModal,punto);
+        },
+        error => {
+          alert("Error"+error.toString())
+        }  
+      )
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
 
+  /**
+   * Copia cada uno de los atributos del objeto para evitar que hagan referencia al mismo objeto
+   * @param punto1 Origen
+   * @param punto2 Destino
+   */
   private copyPoint(punto1,punto2){
-    //copiamos objeto y hacen referencia al mismo//no quiero actualizar el otro si no guarda
-    //this.puntoModal = punto;
-    //los primarios se copian por valor
     punto2.id = punto1.id;
     punto2.name = punto1.name;
     punto2.coordX = punto1.coordX;
@@ -48,6 +75,10 @@ export class TablePointsComponent implements OnInit {
     punto2.icon = punto1.icon;
   }
 
+  /**
+   * metodo auxiliar para el modal que comprueba si se cierra de otra forma que no sea con el boton
+   * @param reason razon del cierre
+   */
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';

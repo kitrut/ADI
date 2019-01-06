@@ -18,5 +18,17 @@ export class TableTiposComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  public detallesTipo(type){
+    alert(type.desc);
+  }
+  public deleteTipo(type){
+    this.dataService.deleteType(type.id).subscribe(
+      data => {
+        this.tipos = this.tipos.filter((i) => i !== type);
+      },
+      error => {
+        alert("Error"+error.toString())
+      }  
+    ) 
+  }
 }

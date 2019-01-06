@@ -31,4 +31,13 @@ export class DataService {
   registro(user,pass){
     return this.http.post(this.url+"/registro",{"usuario":user,"password":pass});
   }
+  updatePoint(punto){
+    return this.http.put(this.url+"/api/points/"+punto.id,{"name":punto.name,"coordX":punto.coordX,"coordY":punto.coordY,"coordZ":punto.coordZ,"type":punto.type,"icon":punto.icon,"token":localStorage.getItem("token")});
+  }
+  deletePoint(id){
+    return this.http.delete(this.url+"/api/points/"+id,{params:{"token":localStorage.getItem("token")}});
+  }
+  deleteType(id){
+    return this.http.delete(this.url+"/api/types/"+id,{params:{"token":localStorage.getItem("token")}});
+  }
 }

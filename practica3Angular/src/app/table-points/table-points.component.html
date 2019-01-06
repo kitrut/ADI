@@ -14,7 +14,7 @@
       <td>{{punto.type}}</td>
       <td>
         <a title="Detalles" (click)="open(content,punto)"><i class="fa fa-eye" style="color:green"></i></a>
-        <a title="Borrar"><i class="fa fa-trash" style="color:red"></i></a>
+        <a title="Borrar" (click)="delete(punto)"><i class="fa fa-trash" style="color:red"></i></a>
       </td>
     </tr>
   </tbody>
