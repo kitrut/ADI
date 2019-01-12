@@ -1,9 +1,8 @@
 # ADI 2018 Manuel Morote Herrero mmh30@alu.ua.es
 ## [Enlace a github](https://github.com/kitrut/ADI)
 ## [Documentación de los endpoints](https://documenter.getpostman.com/view/5736518/RzZ4r2un)
-![testapi](https://user-images.githubusercontent.com/36452194/47957803-4c7eee00-dfbd-11e8-85dc-beb82944ef6e.PNG)
 
-# =Práctica 3=
+# ==Práctica 3==
 * Objetivo: Aplicación cliente usando un framework, en mi caso Angular
 Para su ejecución:
 ```
@@ -33,7 +32,7 @@ ng serve
   vinculada, pero hasta que el servidor no devuelve el OK, no se actualiza la variable de la lista, permitiendo conservar el valor antiguo si no se está seguro de la edición y desea cancelarse. Solo se actualizará si pulsamos el botón del modal. 
   * Enrutador: Para el uso en Angular he usado las librerías RouterModule,Route pertenecientes al propio framework. Las rutas y que componentes deben cargar se encuentran en app.module.ts. En los botones de navegación debemos sustituir los href por routerLink para evitar el refresco de la página
 
-# =Práctica 2=
+# ==Práctica 2==
 * Se añade una aplicación cliente para mostrar los resultados arrojados por el servidor
 
 Para su ejecución:
@@ -68,3 +67,6 @@ node main.js
   * Listado 2: La columna intermedia representa ese segundo listado junto con sus funciones de detalles y borrado
   * Edición: como he mencionado en las cosas a tener en cuenta, el botón detalles de puntos cargará sus datos en el formulario permitiendo así su modificación o la creación de nuevos puntos basados en éste.
   * Estructurar el proyecto: se ha hecho lo todo lo posible para modularizar algunas partes
+
+Testing
+![testapi](https://user-images.githubusercontent.com/36452194/47957803-4c7eee00-dfbd-11e8-85dc-beb82944ef6e.PNG)
