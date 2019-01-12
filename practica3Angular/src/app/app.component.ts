@@ -8,15 +8,17 @@ import { DataService } from './data.service'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title: string = 'practica3Angular';
-  users: string[] = ['juan','manu','alvaro','javi'];
   activated: boolean = false;
   loginOK:boolean = false;
-  posts = [];
 
   constructor(private dataService:DataService){
-    this.dataService.getPoints().subscribe(data => {
-      this.posts = data;
-    });
+    //podriamos testear el token, pero expondriamos al servidor a un ataque para obtener tokens validos
+    if(localStorage.getItem("token")) this.loginOK = true;
+    // por lo que dejaremos la informacion abierta para la practica, pudiendo cerrar la sesion, ante 
+    // una respuesta no autorizada del servidor
+  }
+  logout(){
+    localStorage.removeItem("token");
+    this.loginOK=false;
   } 
 }

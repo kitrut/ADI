@@ -1,3 +1,27 @@
-<p>
-  point-form works!
-</p>
+<form>
+    <div class="form-group">
+        <label for="nombreInput">Nombre</label>
+        <input type="text" name="nombreInput" class="form-control" [(ngModel)]="punto.name">
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="coordxInput">Coordenada X</label>
+            <input type="text" name="coordxInput" class="form-control" [(ngModel)]="punto.coordX">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="coordyInput">Coordenada Y</label>
+            <input type="text" name="coordyInput" class="form-control" [(ngModel)]="punto.coordY">
+        </div>
+        <div class="form-group col-md-4">  
+            <label for="coordzInput">Coordenada Z</label>
+            <input type="text" name="coordzInput" class="form-control" [(ngModel)]="punto.coordZ">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="tipoInput">Tipo</label>
+        <input type="text" name="tipoInput" class="form-control" [(ngModel)]="punto.type">
+        <label for="iconInput">Icono</label>
+        <input type="text" name="iconInput" class="form-control" [(ngModel)]="punto.icon">
+    </div>
+    <button (click)="store()">Guardar</button>
+</form>

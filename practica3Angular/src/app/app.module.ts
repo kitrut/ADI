@@ -18,7 +18,9 @@ import { PrincipalComponent } from './principal/principal.component';
 
 const routes:Route[] = [
   {path: '',component:PrincipalComponent},
-  {path: 'login',component:LoginComponent}
+  {path: 'creator',component:PointFormComponent},
+  {path: 'table1',component:TablePointsComponent},
+  {path: 'table2',component:TableTiposComponent}
 ];
 
 @NgModule({

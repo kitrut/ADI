@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DataService } from '.././data.service';
-import { PrincipalComponent } from '../principal/principal.component';
+import { AppComponent} from '../app.component'
 
 @Component({
   selector: 'app-login',
@@ -9,7 +9,7 @@ import { PrincipalComponent } from '../principal/principal.component';
 })
 export class LoginComponent implements OnInit {
 
-  @Input() refPrincipal:PrincipalComponent;
+  @Input() refPrincipal:AppComponent;
 
   constructor(private dataService:DataService) { }
 
@@ -28,8 +28,8 @@ export class LoginComponent implements OnInit {
     )    
     return false;
   }
-  registro(user,pass){
-    this.dataService.registro(user.value,pass.value).subscribe(
+  registro(userReg,passReg){
+    this.dataService.registro(userReg.value,passReg.value).subscribe(
       data => {
         alert("Registro correcto, por favor logueate para acceder a la informacion")
       },

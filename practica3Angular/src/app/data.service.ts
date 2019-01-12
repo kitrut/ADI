@@ -1,9 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 
 import { Post } from './1_Interfaces/Post';
 import { Point} from './1_Interfaces/Point';
 import { Type} from './1_Interfaces/Type';
+
+var httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json',
+    'Authorization': 'my-auth-token'
+  })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +46,8 @@ export class DataService {
   }
   deleteType(id){
     return this.http.delete(this.url+"/api/types/"+id,{params:{"token":localStorage.getItem("token")}});
+  }
+  createPoint(punto){
+    return this.http.post(this.url+"/api/points",{"name":punto.name,"coordX":punto.coordX,"coordY":punto.coordY,"coordZ":punto.coordZ,"type":punto.type,"icon":punto.icon,"token":localStorage.getItem("token")});
   }
 }

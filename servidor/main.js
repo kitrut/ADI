@@ -10,7 +10,7 @@ var database = require("./database/database") // crea el schema de base de datos
 database.createModel();
 
 app.use(function(req,resp,next){
-    console.log('Petición en:',Date.now(),' Solicita: '+req.path);
+    console.log('Petición en:',Date.now(),' Solicita: '+req.method+' '+req.path+req.query);
     next();
 });
 
